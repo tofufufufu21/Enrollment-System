@@ -6,66 +6,57 @@ import Registrar.*;
 public class UserType {
     public static void user_type_menu() {
         Scanner scanner = new Scanner(System.in);
-        char userType, option;
 
-        do {
+        while (true) {
             System.out.println("MAIN MENU");
             System.out.println("1. Registrar");
             System.out.println("2. Accounting");
             System.out.println("3. Student Dashboard");
             System.out.println("\n0. Exit");
             System.out.print("Select your choice: ");
-            userType = scanner.next().charAt(0);
+
+            char userType = scanner.next().charAt(0);
+            scanner.nextLine(); // Handle newline
 
             switch (userType) {
+                case '1':
+                    System.out.println("Registrar Module");
+                    RegistrarLogin registrarlogin = new RegistrarLogin();
+                    registrarlogin.registrar_menu();
+                    break;
+
+                case '2':
+                    System.out.println("Accounting Module");
+                    break;
+
+                case '3':
+                    System.out.println("Student Dashboard Module");
+                    break;
+
                 case '0':
-                    do {
+                    while (true) {
                         System.out.print("\nDo you really want to exit the program (y/n): ");
-                        option = scanner.next().charAt(0);
+                        char option = scanner.next().charAt(0);
+                        scanner.nextLine(); // Handle newline
 
                         if (option == 'y' || option == 'Y') {
                             System.out.println("\nThank you.....");
                             System.exit(0);
                         } else if (option == 'n' || option == 'N') {
-                            user_type_menu();  // Call the static method again
+                            break;  // Exit the confirmation loop and return to the main menu
                         } else {
-                            System.out.println("Invalid option.");
-                            System.out.println("Press Enter to continue...");
-                            scanner.nextLine();  // Press any key
-                            scanner.nextLine();  // Handle newline
+                            System.out.println("Invalid option. Press Enter to continue...");
+                            scanner.nextLine();
                         }
-                    } while (true);
-
-                case '1':
-                    System.out.println("Registrar Module");
-                    System.out.println("Press Enter to continue...");
-                    RegistrarLogin registrarlogin = new RegistrarLogin();
-                    registrarlogin.registrar_menu();
-                    scanner.nextLine();
-                    scanner.nextLine();
-                    break;
-
-                case '2':
-                    System.out.println("Accounting Module");
-                    System.out.println("Press Enter to continue...");
-                    scanner.nextLine();
-                    scanner.nextLine();
-                    break;
-
-                case '3':
-                    System.out.println("Student Dashboard Module");
-                    System.out.println("Press Enter to continue...");
-                    scanner.nextLine();
-                    scanner.nextLine();
+                    }
                     break;
 
                 default:
-                    System.out.println("\nInvalid input. Try again...");
-                    System.out.println("Press Enter to continue...");
-                    scanner.nextLine();
+                    System.out.println("\nInvalid input. Press Enter to continue...");
                     scanner.nextLine();
                     break;
             }
-        } while (userType != '0');
+            System.out.println();  // For a cleaner new line
+        }
     }
 }
