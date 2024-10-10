@@ -1,6 +1,10 @@
 package Admin_Portal;
 
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 
 public class Enroll_Student {
     private static final int MAX_SUBJECTS = 10; // Adjust as needed
@@ -37,6 +41,7 @@ public class Enroll_Student {
     public static class Student {
         String name;
         String phoneNumber;
+        String selectedStrand;
         String paymentStatus;
         int id;
         int balance;
@@ -55,6 +60,11 @@ public class Enroll_Student {
         int grade;
         char confirmation, choice;
         int lastId = loadLastUsedId();
+
+
+        strands11 = new Strand[4]; // Assuming 4 strands for grade 11
+        strands12 = new Strand[4]; // Assuming 4 strands for grade 12
+        InitializeStrands.initializeStrands(strands11, strands12);
 
         System.out.println("ENROLL A NEW STUDENT\n");
 
@@ -188,6 +198,23 @@ public class Enroll_Student {
     }
 
     private void saveStudentToFile(Student student) {
-        // Implement your method to save student details to file
+        try (FileWriter fileWriter = new FileWriter("students.csv", true);
+             PrintWriter printWriter = new PrintWriter(fileWriter)) {
+            printWriter.printf("%d,%s,%s,%s,%s,%d,",
+                    student.id,
+                    student.name,
+                    student.phoneNumber,
+                    student.selectedStrand,
+                    student.paymentStatus,
+                    student.balance);
+
+            for (int i = 0; i < student.numEnrolledSubjects; i++) {
+                printWriter.printf("%s,", student.enrolledSubjects[i].name);
+            }
+
+            printWriter.println();
+        } catch (IOException e) {
+            System.out.println("Error opening file: " + e.getMessage());
+        }
     }
 }
