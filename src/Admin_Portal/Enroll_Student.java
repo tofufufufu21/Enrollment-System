@@ -1,13 +1,14 @@
 package Admin_Portal;
 
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-
 public class Enroll_Student {
-    private static final int MAX_SUBJECTS = 10; // Adjust as needed
+    public static final int MAX_SUBJECTS = 10; // Adjust as needed
     private static final int SUBJECT_COST = 1000; // Cost per subject
     private static final int LAB_FEE = 5000; // Example fee values
     private static final int PE_FEE = 5000;
@@ -15,7 +16,6 @@ public class Enroll_Student {
     private static final int LIBRARY_FEE = 5000;
     private static final int WATER_ENERGY_FEE = 5000;
 
-    // Change access modifier to public
     public static class Subject {
         String name;
 
@@ -24,7 +24,6 @@ public class Enroll_Student {
         }
     }
 
-    // Change access modifier to public
     public static class Strand {
         String name;
         Subject[] subjects;
@@ -35,13 +34,17 @@ public class Enroll_Student {
             this.subjects = subjects;
             this.numSubjects = subjects.length;
         }
+
+        // Getter for name
+        public String getName() {
+            return name; // Return the name of the strand
+        }
     }
 
-    // Change access modifier to public
     public static class Student {
         String name;
         String phoneNumber;
-        String selectedStrand;
+        Strand selectedStrand;
         String paymentStatus;
         int id;
         int balance;
@@ -52,6 +55,20 @@ public class Enroll_Student {
             this.enrolledSubjects = new Subject[MAX_SUBJECTS];
             this.numEnrolledSubjects = 0;
         }
+
+        // Getter methods
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        // Return the selected Strand without creating a new one
+        public Strand getStrand() {
+            return selectedStrand; // Return the actual selected Strand object
+        }
     }
 
     public void enrollStudent(Strand[] strands11, Strand[] strands12, Student[] students, int[] studentCount) {
@@ -60,7 +77,6 @@ public class Enroll_Student {
         int grade;
         char confirmation, choice;
         int lastId = loadLastUsedId();
-
 
         strands11 = new Strand[4]; // Assuming 4 strands for grade 11
         strands12 = new Strand[4]; // Assuming 4 strands for grade 12
@@ -118,12 +134,14 @@ public class Enroll_Student {
                 grade = 12;
                 break;
             case '0':
-                // Handle cancellation if needed
-                return;
+                return; // Cancel enrollment
             default:
                 System.out.println("Invalid choice.");
                 return;
         }
+
+        // Assign the selected strand to the new student
+        newStudent.selectedStrand = selectedStrand;
 
         System.out.println("\n1000 Pesos per subject");
 
@@ -189,12 +207,29 @@ public class Enroll_Student {
     }
 
     private int loadLastUsedId() {
-        // Implement your method to load last used ID
-        return 0; // Placeholder
+        File file = new File("last_id.txt");
+
+        if (!file.exists()) {
+            return 0; // Start from ID 1 if file does not exist
+        }
+
+        try (Scanner scanner = new Scanner(file)) {
+            if (scanner.hasNextInt()) {
+                return scanner.nextInt();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Error opening file: " + e.getMessage());
+        }
+
+        return 0; // Return 0 if unable to read the file
     }
 
-    private void saveNewId(int id) {
-        // Implement your method to save new ID
+    private void saveNewId(int newId) {
+        try (FileWriter fileWriter = new FileWriter("last_id.txt", false)) { // false to overwrite the file
+            fileWriter.write(String.valueOf(newId));
+        } catch (IOException e) {
+            System.out.println("Error opening file: " + e.getMessage());
+        }
     }
 
     private void saveStudentToFile(Student student) {
@@ -204,7 +239,7 @@ public class Enroll_Student {
                     student.id,
                     student.name,
                     student.phoneNumber,
-                    student.selectedStrand,
+                    student.selectedStrand.getName(), // Get the name of the selected strand
                     student.paymentStatus,
                     student.balance);
 

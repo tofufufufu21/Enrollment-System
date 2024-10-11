@@ -8,6 +8,7 @@ public class AdminPortal {
     public static void adminPortal(String name, Enroll_Student.Strand[] strands11, Enroll_Student.Strand[] strands12, Enroll_Student.Student[] students, int[] studentCount) {
         char choice, option;
         Enroll_Student enrollStudent = new Enroll_Student(); // Create an instance of Enroll_Student
+        ShowAllStudents showAllStudents = new ShowAllStudents(); // Create an instance of ShowAllStudents
 
         while (true) {
             System.out.println("Welcome, " + name + "!\n");
@@ -28,8 +29,8 @@ public class AdminPortal {
                     enrollStudent.enrollStudent(strands11, strands12, students, studentCount);
                     break;
                 case '2':
-                    System.out.println("Showing all students...");
-                    // Code for showing all students goes here
+                    System.out.println("Showing all students from CSV...");
+                    showAllStudents.showAllFromCSV(); // Call the new method to show all students
                     pressAnyKey();
                     break;
                 case '3':
