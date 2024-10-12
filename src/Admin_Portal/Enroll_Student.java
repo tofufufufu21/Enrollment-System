@@ -159,6 +159,12 @@ public class Enroll_Student {
             return;
         }
 
+        // Check if the student enrolled in at least one subject
+        if (newStudent.numEnrolledSubjects == 0) {
+            System.out.println("You didn't enroll in at least one subject. Your enrollment is cancelled, kupal.");
+            return; // Cancel enrollment if no subjects were selected and don't save anything
+        }
+
         do {
             System.out.printf("\nTotal Subject cost: %d\n", newStudent.numEnrolledSubjects * SUBJECT_COST);
             System.out.print("\nAre you sure you want to enroll? (y/n): ");
