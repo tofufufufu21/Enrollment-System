@@ -1,4 +1,4 @@
-package Admin_Portal;
+package Enrollment;
 
 import java.util.Scanner;
 import java.io.File;

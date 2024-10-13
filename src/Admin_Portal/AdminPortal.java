@@ -1,5 +1,9 @@
 package Admin_Portal;
 
+import Enrollment.Enroll_Student;
+import Enrollment.ShowAllStudents;
+import Enrollment.SearchStudent; // Import the SearchStudent class
+
 import java.util.Scanner;
 
 public class AdminPortal {
@@ -9,6 +13,7 @@ public class AdminPortal {
         char choice, option;
         Enroll_Student enrollStudent = new Enroll_Student(); // Create an instance of Enroll_Student
         ShowAllStudents showAllStudents = new ShowAllStudents(); // Create an instance of ShowAllStudents
+        SearchStudent searchStudent = new SearchStudent(); // Create an instance of SearchStudent
 
         while (true) {
             System.out.println("Welcome, " + name + "!\n");
@@ -35,7 +40,7 @@ public class AdminPortal {
                     break;
                 case '3':
                     System.out.println("Searching a student...");
-                    // Code for searching a student goes here
+                    searchStudent.searchStudentById(); // Call the searchStudentById method
                     pressAnyKey();
                     break;
                 case '4':

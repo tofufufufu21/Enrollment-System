@@ -1,4 +1,4 @@
-package Admin_Portal;
+package Enrollment;
 
 public class Strand {
     public String name;

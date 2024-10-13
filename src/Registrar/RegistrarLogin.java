@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import Admin_Portal.*;
+import Enrollment.Enroll_Student;
 
 public class RegistrarLogin {
     private static final String CREDENTIALS_FILE = "registrar_credentials.txt";

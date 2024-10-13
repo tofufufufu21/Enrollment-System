@@ -1,4 +1,4 @@
-package Admin_Portal;
+package Enrollment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
