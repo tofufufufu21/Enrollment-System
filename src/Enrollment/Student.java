@@ -24,7 +24,48 @@ public class Student {
         return name;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getSelectedStrand() {
+        return selectedStrand;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
     public Enroll_Student.Strand getStrand() {
         return new Enroll_Student.Strand(selectedStrand, null); // Adjust as needed; currently returns a dummy Strand
+    }
+
+    // Setter methods
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setSelectedStrand(String selectedStrand) {
+        this.selectedStrand = selectedStrand;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 }

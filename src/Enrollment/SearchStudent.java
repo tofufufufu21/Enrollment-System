@@ -6,88 +6,92 @@ import java.util.Scanner;
 
 public class SearchStudent {
 
-    public static class Student {
-        int id;
-        String name;
-        String phoneNumber;
-        String selectedStrand;
-        String paymentStatus;
-        int balance;
-        String[] enrolledSubjects;
-        int numEnrolledSubjects;
+    public void searchStudentById(int studentId) {
+        String fileName = "student_" + studentId + ".csv"; // Construct the filename for the student
+        File file = new File(fileName);
 
-        public Student() {
-            this.enrolledSubjects = new String[10]; // Adjust if needed
-            this.numEnrolledSubjects = 0;
-        }
-    }
-
-    public static void searchStudentById() {
-        File file = new File("students.csv");
         if (!file.exists()) {
-            System.out.println("Error: File 'students.csv' not found!");
+            System.out.println("Student with ID " + studentId + " not found.");
+            pressAnyKey();
             return;
         }
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter Student ID to search: ");
-        int searchId = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        try (Scanner scanner = new Scanner(file)) {
+            if (scanner.hasNextLine()) {
+                // Skip the header line
+                scanner.nextLine(); // Read and ignore the header
 
-        try (Scanner fileScanner = new Scanner(file)) {
-            // Skip the header line if it exists
-            boolean found = false;
-            Student student = new Student();
-
-            while (fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine();
-                String[] data = line.split(",");
-
-                // Ensure we have at least 6 fields for the base student info
-                if (data.length >= 6) {
-                    student.id = Integer.parseInt(data[0]);
-                    student.name = data[1];
-                    student.phoneNumber = data[2];
-                    student.selectedStrand = data[3];
-                    student.paymentStatus = data[4];
-                    student.balance = Integer.parseInt(data[5]);
-
-                    // Check if the ID matches the search
-                    if (student.id == searchId) {
-                        // Parse enrolled subjects (from the 7th column onwards)
-                        student.numEnrolledSubjects = 0;
-                        for (int i = 6; i < data.length; i++) {
-                            student.enrolledSubjects[student.numEnrolledSubjects] = data[i];
-                            student.numEnrolledSubjects++;
-                        }
-
-                        // Display student information
-                        found = true;
-                        printStudentDetails(student);
-                        break; // Exit once the student is found
-                    }
+                if (scanner.hasNextLine()) {
+                    String studentData = scanner.nextLine(); // Read the student data
+                    String[] data = studentData.split(","); // Split the student data into fields
+                    System.out.printf("Student ID %d Found\n", studentId);
+                    System.out.println("Student Data:");
+                    System.out.println("ID: " + data[0]);
+                    System.out.println("Name: " + data[1]);
+                    System.out.println("Phone Number: " + data[2]);
+                    System.out.println("Strand: " + data[3]);
+                    System.out.println("Payment Status: " + data[4]);
+                    System.out.println("Balance: " + data[5]);
+                    // Add any other relevant fields here
                 }
             }
-
-            if (!found) {
-                System.out.println("\nNo student found with ID: " + searchId);
-            }
-
         } catch (FileNotFoundException e) {
-            System.out.println("Error reading file: " + e.getMessage());
+            System.out.println("Error opening file: " + e.getMessage());
         }
+        pressAnyKey(); // Wait for user input after displaying student data
     }
 
-    private static void printStudentDetails(Student student) {
-        System.out.println("Student ID: " + student.id);
-        System.out.println("Name: " + student.name);
-        System.out.println("Phone Number: " + student.phoneNumber);
-        System.out.println("Strand: " + student.selectedStrand);
-        System.out.println("Payment Status: " + student.paymentStatus);
-        System.out.println("Balance: " + student.balance);
-        System.out.println("Enrolled Subjects: ");
-        for (int i = 0; i < student.numEnrolledSubjects; i++) {
-            System.out.println("- " + student.enrolledSubjects[i]);
+    public void searchStudentByName(String studentName) {
+        File folder = new File("."); // Current directory
+        File[] files = folder.listFiles((dir, name) -> name.startsWith("student_") && name.endsWith(".csv"));
+
+        if (files == null || files.length == 0) {
+            System.out.println("No student records found.");
+            pressAnyKey();
+            return;
         }
+
+        boolean found = false;
+
+        for (File file : files) {
+            try (Scanner scanner = new Scanner(file)) {
+                if (scanner.hasNextLine()) {
+                    // Skip the header line
+                    scanner.nextLine(); // Read and ignore the header
+
+                    if (scanner.hasNextLine()) {
+                        String studentData = scanner.nextLine(); // Read student data
+                        String[] data = studentData.split(","); // Split the student data into fields
+
+                        if (data[1].equalsIgnoreCase(studentName)) {
+                            System.out.printf("Student ID %s Found\n", data[0]); // Using ID from data
+                            System.out.println("Student Data:");
+                            System.out.println("ID: " + data[0]);
+                            System.out.println("Name: " + data[1]);
+                            System.out.println("Phone Number: " + data[2]);
+                            System.out.println("Strand: " + data[3]);
+                            System.out.println("Payment Status: " + data[4]);
+                            System.out.println("Balance: " + data[5]);
+                            // Add any other relevant fields here
+                            found = true;
+                        }
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                System.out.println("Error opening file: " + e.getMessage());
+            }
+        }
+
+        if (!found) {
+            System.out.println("No student found with the name: " + studentName);
+        }
+        pressAnyKey(); // Wait for user input after search
+    }
+
+    // Method to simulate "Press any key to continue"
+    private void pressAnyKey() {
+        System.out.println("Press Enter to continue...");
+        Scanner scanner = new Scanner(System.in); // Create a new Scanner for user input
+        scanner.nextLine();
     }
 }

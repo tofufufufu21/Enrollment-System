@@ -2,8 +2,11 @@ package Admin_Portal;
 
 import Enrollment.Enroll_Student;
 import Enrollment.ShowAllStudents;
-import Enrollment.SearchStudent; // Import the SearchStudent class
+import Enrollment.SearchStudent;
+import Enrollment.EditStudent; // Import the EditStudent class
+import Enrollment.DeleteStudent;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class AdminPortal {
@@ -14,6 +17,7 @@ public class AdminPortal {
         Enroll_Student enrollStudent = new Enroll_Student(); // Create an instance of Enroll_Student
         ShowAllStudents showAllStudents = new ShowAllStudents(); // Create an instance of ShowAllStudents
         SearchStudent searchStudent = new SearchStudent(); // Create an instance of SearchStudent
+        EditStudent editStudent = new EditStudent(); // Create an instance of EditStudent
 
         while (true) {
             System.out.println("Welcome, " + name + "!\n");
@@ -30,28 +34,36 @@ public class AdminPortal {
 
             switch (choice) {
                 case '1':
-                    // Call the enrollStudent method from Enroll_Student class
                     enrollStudent.enrollStudent(strands11, strands12, students, studentCount);
                     break;
                 case '2':
                     System.out.println("Showing all students from CSV...");
-                    showAllStudents.showAllFromCSV(); // Call the new method to show all students
+                    showAllStudents.showAllFromCSV();
                     pressAnyKey();
                     break;
                 case '3':
                     System.out.println("Searching a student...");
-                    searchStudent.searchStudentById(); // Call the searchStudentById method
+                    System.out.print("Enter Student ID to search: ");
+                    try {
+                        int studentId = scanner.nextInt(); // Get student ID input
+                        searchStudent.searchStudentById(studentId); // Call the searchStudentById method
+                    } catch (InputMismatchException e) {
+                        System.out.println("Invalid input! Please enter a valid Student ID.");
+                        scanner.nextLine(); // Clear the invalid input
+                    }
                     pressAnyKey();
                     break;
                 case '4':
                     System.out.println("Editing student information...");
-                    // Code for editing student information goes here
+                    editStudent.editStudentDetails();
+                    pressAnyKey();
                     break;
                 case '5':
                     System.out.println("Do you really want to delete a student? (y/n): ");
                     option = scanner.next().charAt(0);
                     if (option == 'y' || option == 'Y') {
-                        // Code for deleting a student goes here
+                        DeleteStudent deleteStudent = new DeleteStudent();
+                        deleteStudent.deleteStudent();
                     } else if (option == 'n' || option == 'N') {
                         pressAnyKey();
                     } else {
