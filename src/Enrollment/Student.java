@@ -6,12 +6,18 @@ public class Student {
     String selectedStrand;
     String paymentStatus;
     int id;
-    int balance;
+    double balance; // Change to double
     int numEnrolledSubjects;
     Enroll_Student.Subject[] enrolledSubjects; // Reference to Subject inside Enroll_Student
 
-    public Student() {
-        this.enrolledSubjects = new Enroll_Student.Subject[Enroll_Student.MAX_SUBJECTS]; // Access MAX_SUBJECTS
+    public Student(int id, String name, double balance, String phoneNumber, String selectedStrand, String paymentStatus) {
+        this.id = id;
+        this.name = name;
+        this.balance = balance; // Correctly assigning double
+        this.phoneNumber = phoneNumber;
+        this.selectedStrand = selectedStrand;
+        this.paymentStatus = paymentStatus;
+        this.enrolledSubjects = new Enroll_Student.Subject[Enroll_Student.MAX_SUBJECTS];
         this.numEnrolledSubjects = 0;
     }
 
@@ -36,12 +42,8 @@ public class Student {
         return paymentStatus;
     }
 
-    public int getBalance() {
+    public double getBalance() { // Change return type to double
         return balance;
-    }
-
-    public Enroll_Student.Strand getStrand() {
-        return new Enroll_Student.Strand(selectedStrand, null); // Adjust as needed; currently returns a dummy Strand
     }
 
     // Setter methods
@@ -65,7 +67,7 @@ public class Student {
         this.paymentStatus = paymentStatus;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(double balance) { // Change parameter type to double
         this.balance = balance;
     }
 }

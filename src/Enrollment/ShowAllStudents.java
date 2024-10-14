@@ -30,13 +30,16 @@ public class ShowAllStudents {
                         String phoneNumber = data[2].trim();
                         String selectedStrand = data[3].trim();
                         String paymentStatus = data[4].trim();
-                        int balance = Integer.parseInt(data[5].trim());
+                        // Change balance parsing to double
+                        double balance = Double.parseDouble(data[5].trim());
 
-                        // Adjust formatting to ensure proper alignment
-                        System.out.printf("%-5d %-20s %-15s %-10s %-15s %-10d%n", id, name, phoneNumber, selectedStrand, paymentStatus, balance);
+                        // Adjust formatting to ensure proper alignment, using %.2f for balance
+                        System.out.printf("%-5d %-20s %-15s %-10s %-15s %-10.2f%n", id, name, phoneNumber, selectedStrand, paymentStatus, balance);
                     }
                 } catch (FileNotFoundException e) {
                     System.out.println("Error opening file: " + e.getMessage());
+                } catch (NumberFormatException e) {
+                    System.out.println("Error parsing number: " + e.getMessage());
                 }
             }
         } else {
