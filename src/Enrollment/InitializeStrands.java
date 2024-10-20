@@ -1,96 +1,58 @@
 package Enrollment;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class InitializeStrands {
 
-    public static void initializeStrands(Enroll_Student.Strand[] strands11, Enroll_Student.Strand[] strands12) {
-        // Initialize Grade 11 strands and subjects
-        Enroll_Student.Subject[] stem11Subjects = {
-                new Enroll_Student.Subject("General Mathematics"),
-                new Enroll_Student.Subject("Earth Science"),
-                new Enroll_Student.Subject("Physical Education"),
-                new Enroll_Student.Subject("ICT"),
-                new Enroll_Student.Subject("Disaster Readiness and Risk"),
-                new Enroll_Student.Subject("Introduction to Philosophy 1"),
-                new Enroll_Student.Subject("Personality Development")
-        };
-        strands11[1] = new Enroll_Student.Strand("STEM", stem11Subjects);
+    // Load strands from the specified CSV file
+    public Strand loadStrands(String filename) {
+        List<Subject> subjects = new ArrayList<>();
+        String strandName = ""; // Initialize strand name
 
-        Enroll_Student.Subject[] abm11Subjects = {
-                new Enroll_Student.Subject("Oral Communication"),
-                new Enroll_Student.Subject("Komunikasyon at Pananaliksik"),
-                new Enroll_Student.Subject("General Mathematics"),
-                new Enroll_Student.Subject("Personality Development"),
-                new Enroll_Student.Subject("Disaster Readiness and Risk"),
-                new Enroll_Student.Subject("Entrepreneurship"),
-                new Enroll_Student.Subject("Organization Management")
-        };
-        strands11[0] = new Enroll_Student.Strand("ABM", abm11Subjects);
+        // Load subjects from the specified CSV file
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            // Read the first line (strand name)
+            if ((strandName = br.readLine()) != null) {
+                strandName = strandName.trim(); // Get strand name
+            }
 
-        Enroll_Student.Subject[] humss11Subjects = {
-                new Enroll_Student.Subject("Information Technology"),
-                new Enroll_Student.Subject("Komunikasyon at Pananaliksik"),
-                new Enroll_Student.Subject("Physical Education"),
-                new Enroll_Student.Subject("Physical Science"),
-                new Enroll_Student.Subject("Reading and Writing"),
-                new Enroll_Student.Subject("Earth and Science"),
-                new Enroll_Student.Subject("Personality and Development")
-        };
-        strands11[2] = new Enroll_Student.Strand("HUMSS", humss11Subjects);
+            // Read each subsequent line as a subject
+            String line;
+            while ((line = br.readLine()) != null) {
+                String subjectName = line.trim(); // Get subject name
+                if (!subjectName.isEmpty()) {
+                    subjects.add(new Subject(subjectName)); // Create and add Subject object
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading strands from file: " + filename);
+            e.printStackTrace();
+            return null; // Return null if there's an error
+        }
 
-        Enroll_Student.Subject[] gas11Subjects = {
-                new Enroll_Student.Subject("Oral Communication"),
-                new Enroll_Student.Subject("General Mathematics"),
-                new Enroll_Student.Subject("Earth and Life Science"),
-                new Enroll_Student.Subject("Understanding Culture"),
-                new Enroll_Student.Subject("Disaster Readiness and Risk"),
-                new Enroll_Student.Subject("Introduction to Philosophy 1"),
-                new Enroll_Student.Subject("Personality Development")
-        };
-        strands11[3] = new Enroll_Student.Strand("GAS", gas11Subjects);
+        // Return the Strand object with subjects
+        return new Strand(strandName, subjects); // Removed grade
+    }
 
-        // Initialize Grade 12 strands and subjects
-        Enroll_Student.Subject[] stem12Subjects = {
-                new Enroll_Student.Subject("21st Century Literature"),
-                new Enroll_Student.Subject("Basic Calculus"),
-                new Enroll_Student.Subject("Entrepreneurship"),
-                new Enroll_Student.Subject("General Biology"),
-                new Enroll_Student.Subject("Research"),
-                new Enroll_Student.Subject("Pagsulat sa Filipino"),
-                new Enroll_Student.Subject("General Physics 1")
+    // Initialize strands for both grades and return as a list
+    public List<Strand> initializeAllStrands() {
+        List<Strand> strands = new ArrayList<>();
+        String[] csvFiles = {
+                "ABM_11.csv", "STEM_11.csv", "HUMSS_11.csv", "GAS_11.csv",
+                "ABM_12.csv", "STEM_12.csv", "HUMSS_12.csv", "GAS_12.csv"
         };
-        strands12[1] = new Enroll_Student.Strand("STEM", stem12Subjects);
 
-        Enroll_Student.Subject[] abm12Subjects = {
-                new Enroll_Student.Subject("Introduction to Philosophy"),
-                new Enroll_Student.Subject("Contemporary Philippine Arts"),
-                new Enroll_Student.Subject("Physical Education"),
-                new Enroll_Student.Subject("Empowerment Technologies"),
-                new Enroll_Student.Subject("Disaster Readiness and Risk"),
-                new Enroll_Student.Subject("Fundamentals of Accountancy"),
-                new Enroll_Student.Subject("Principles of Marketing")
-        };
-        strands12[0] = new Enroll_Student.Strand("ABM", abm12Subjects);
+        for (String csvFile : csvFiles) {
+            Strand strand = loadStrands(csvFile);
+            if (strand != null) {
+                strands.add(strand); // Add the loaded strand to the list
+            }
+        }
 
-        Enroll_Student.Subject[] humss12Subjects = {
-                new Enroll_Student.Subject("General Mathematics"),
-                new Enroll_Student.Subject("Earth Science"),
-                new Enroll_Student.Subject("Physical Education"),
-                new Enroll_Student.Subject("Philippine Arts"),
-                new Enroll_Student.Subject("Disaster Readiness and Risk"),
-                new Enroll_Student.Subject("Introduction to Philosophy 1"),
-                new Enroll_Student.Subject("Personality Development")
-        };
-        strands12[2] = new Enroll_Student.Strand("HUMSS", humss12Subjects);
-
-        Enroll_Student.Subject[] gas12Subjects = {
-                new Enroll_Student.Subject("General Mathematics"),
-                new Enroll_Student.Subject("Earth Science"),
-                new Enroll_Student.Subject("Physical Education"),
-                new Enroll_Student.Subject("Empowerment Technologies"),
-                new Enroll_Student.Subject("Practical Research 2"),
-                new Enroll_Student.Subject("English for Academic"),
-                new Enroll_Student.Subject("Organization Management")
-        };
-        strands12[3] = new Enroll_Student.Strand("GAS", gas12Subjects);
+        return strands; // Return the list of all strands
     }
 }

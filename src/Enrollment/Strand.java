@@ -1,18 +1,21 @@
 package Enrollment;
 
-public class Strand {
-    public String name;
-    public Enroll_Student.Subject[] subjects; // Reference to Subject inside Enroll_Student
-    public int numSubjects;
+import java.util.List;
 
-    public Strand(String name, Enroll_Student.Subject[] subjects) {
+public class Strand {
+    private final String name;
+    private final List<Subject> subjects;
+
+    public Strand(String name, List<Subject> subjects) {
         this.name = name;
         this.subjects = subjects;
-        this.numSubjects = subjects.length;
     }
 
-    // Getter for name
     public String getName() {
-        return name; // Return the name of the strand
+        return name;
+    }
+
+    public List<Subject> getSubjects() {
+        return subjects;
     }
 }

@@ -1,9 +1,8 @@
 package User_Types;
 
 import java.util.Scanner;
-
 import Registrar.*;
-import User_Accounting.Accounting; // Import Accounting class
+import User_Accounting.Accounting; // Import the Accounting class
 
 public class UserType {
     public static void user_type_menu() {
@@ -30,11 +29,12 @@ public class UserType {
                 case '2':
                     System.out.println("Accounting Module");
                     Accounting accounting = new Accounting(); // Create an instance of Accounting
-                    accounting.studentLogin(); // Call studentLogin method
+                    accounting.studentLogin(); // Call the studentLogin method
                     break;
 
                 case '3':
                     System.out.println("Student Dashboard Module");
+                    // Add the code for Student Dashboard Module here
                     break;
 
                 case '0':

@@ -32,7 +32,7 @@ public class EditStudent {
             writer.write(line + System.lineSeparator()); // Write the header to temp file
 
             // Read student data
-            if ((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 String[] studentData = line.split(","); // Split the data into fields
                 int studentId = Integer.parseInt(studentData[0]);
 
@@ -67,11 +67,6 @@ public class EditStudent {
                     // Write the original data if not found
                     writer.write(line + System.lineSeparator());
                 }
-            }
-
-            // Write remaining lines
-            while ((line = reader.readLine()) != null) {
-                writer.write(line + System.lineSeparator());
             }
 
             if (!found) {

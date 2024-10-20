@@ -3,21 +3,29 @@ package Admin_Portal;
 import Enrollment.Enroll_Student;
 import Enrollment.ShowAllStudents;
 import Enrollment.SearchStudent;
-import Enrollment.EditStudent; // Import the EditStudent class
+import Enrollment.EditStudent;
 import Enrollment.DeleteStudent;
+import Enrollment.InitializeStrands;
+import Enrollment.Strand;
+import Enrollment.Student; // Import the Student class from the Enrollment package
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class AdminPortal {
     private static Scanner scanner = new Scanner(System.in);
 
-    public static void adminPortal(String name, Enroll_Student.Strand[] strands11, Enroll_Student.Strand[] strands12, Enroll_Student.Student[] students, int[] studentCount) {
-        char choice, option;
-        Enroll_Student enrollStudent = new Enroll_Student(); // Create an instance of Enroll_Student
-        ShowAllStudents showAllStudents = new ShowAllStudents(); // Create an instance of ShowAllStudents
-        SearchStudent searchStudent = new SearchStudent(); // Create an instance of SearchStudent
-        EditStudent editStudent = new EditStudent(); // Create an instance of EditStudent
+    public static void adminPortal(String name, Student[] students, int[] studentCount) { // Use the correct Student type
+        char choice;
+        Enroll_Student enrollStudent = new Enroll_Student();
+        ShowAllStudents showAllStudents = new ShowAllStudents();
+        SearchStudent searchStudent = new SearchStudent();
+        EditStudent editStudent = new EditStudent();
+
+        InitializeStrands initializeStrands = new InitializeStrands();
+        // Load all strands without grade parameter
+        List<Strand> strands = initializeStrands.initializeAllStrands();
 
         while (true) {
             System.out.println("Welcome, " + name + "!\n");
@@ -30,11 +38,12 @@ public class AdminPortal {
             System.out.println("\n0. Log Out\n");
             System.out.print("Select your Choice: ");
             choice = scanner.next().charAt(0);
-            scanner.nextLine(); // Handle newline
+            scanner.nextLine();
 
             switch (choice) {
                 case '1':
-                    enrollStudent.enrollStudent(strands11, strands12, students, studentCount);
+                    // Call enrollStudent with List<Strand>
+                    enrollStudent.enrollStudent(strands, students, studentCount);
                     break;
                 case '2':
                     System.out.println("Showing all students from CSV...");
@@ -45,11 +54,11 @@ public class AdminPortal {
                     System.out.println("Searching a student...");
                     System.out.print("Enter Student ID to search: ");
                     try {
-                        int studentId = scanner.nextInt(); // Get student ID input
-                        searchStudent.searchStudentById(studentId); // Call the searchStudentById method
+                        int studentId = scanner.nextInt();
+                        searchStudent.searchStudentById(studentId);
                     } catch (InputMismatchException e) {
                         System.out.println("Invalid input! Please enter a valid Student ID.");
-                        scanner.nextLine(); // Clear the invalid input
+                        scanner.nextLine(); // Clear invalid input
                     }
                     pressAnyKey();
                     break;
@@ -60,7 +69,7 @@ public class AdminPortal {
                     break;
                 case '5':
                     System.out.println("Do you really want to delete a student? (y/n): ");
-                    option = scanner.next().charAt(0);
+                    char option = scanner.next().charAt(0);
                     if (option == 'y' || option == 'Y') {
                         DeleteStudent deleteStudent = new DeleteStudent();
                         deleteStudent.deleteStudent();
@@ -75,9 +84,9 @@ public class AdminPortal {
                     System.out.println("Do you really want to log out? (y/n): ");
                     option = scanner.next().charAt(0);
                     if (option == 'y' || option == 'Y') {
-                        return; // Log out and exit the method
+                        return; // Log out
                     } else if (option == 'n' || option == 'N') {
-                        continue; // Stay in the loop
+                        continue; // Stay logged in
                     } else {
                         System.out.println("Invalid option.");
                         pressAnyKey();
@@ -90,7 +99,6 @@ public class AdminPortal {
         }
     }
 
-    // Method to simulate "Press any key to continue"
     private static void pressAnyKey() {
         System.out.println("Press Enter to continue...");
         scanner.nextLine();

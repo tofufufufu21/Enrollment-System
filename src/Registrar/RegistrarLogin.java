@@ -1,11 +1,15 @@
 package Registrar;
 
+import java.util.List; // Import List
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import Admin_Portal.*;
+import Admin_Portal.AdminPortal;
 import Enrollment.Enroll_Student;
+import Enrollment.InitializeStrands;
+import Enrollment.Strand;
+import Enrollment.Student; // Import the Student class correctly
 
 public class RegistrarLogin {
     private static final String CREDENTIALS_FILE = "registrar_credentials.txt";
@@ -41,10 +45,10 @@ public class RegistrarLogin {
     private static void registrarLogin() {
         String username, password;
 
-        // Example data for strands, students, and student count.
-        Enroll_Student.Strand[] strands11 = {}; // Initialize with actual data
-        Enroll_Student.Strand[] strands12 = {}; // Initialize with actual data
-        Enroll_Student.Student[] students = new Enroll_Student.Student[100]; // Adjust size as needed
+        // Initialize strands and students
+        InitializeStrands initializeStrands = new InitializeStrands();
+        List<Strand> strands = initializeStrands.initializeAllStrands(); // Load all strands as List<Strand>
+        Student[] students = new Student[100]; // Use the correct Student type from the Enrollment package
         int[] studentCount = new int[1]; // Adjust as needed
 
         while (true) { // Loop until valid login
@@ -60,7 +64,7 @@ public class RegistrarLogin {
                 System.out.println("\nLogin Successful!\n");
                 System.out.println("Press Enter to continue...");
                 scanner.nextLine(); // Wait for user to press Enter
-                AdminPortal.adminPortal(username, strands11, strands12, students, studentCount); // Call with all required arguments
+                AdminPortal.adminPortal(username, students, studentCount); // Call with all required arguments
                 break; // Exit loop on successful login
             } else {
                 System.out.println("\nInvalid Username or Password. Please Try Again.\n");
@@ -93,10 +97,14 @@ public class RegistrarLogin {
 
     // Function to generate default admin credentials
     private static void generateDefaultAdminCredentials() {
-        try (FileWriter writer = new FileWriter(CREDENTIALS_FILE)) {
-            writer.write("admin admin"); // Username: admin, Password: admin
-        } catch (IOException e) {
-            System.out.println("Error: Could not create registrar credentials file.");
+        // Check if the file already exists to prevent overwriting
+        File file = new File(CREDENTIALS_FILE);
+        if (!file.exists()) {
+            try (FileWriter writer = new FileWriter(CREDENTIALS_FILE)) {
+                writer.write("admin admin"); // Username: admin, Password: admin
+            } catch (IOException e) {
+                System.out.println("Error: Could not create registrar credentials file.");
+            }
         }
     }
 }
