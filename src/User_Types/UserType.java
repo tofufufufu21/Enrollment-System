@@ -1,12 +1,20 @@
 package User_Types;
 
+import java.util.List; // Import List
 import java.util.Scanner;
 import Registrar.*;
 import User_Accounting.Accounting; // Import the Accounting class
+import StudentDashboard.Dashboard; // Import the Dashboard class
+import Enrollment.InitializeStrands; // Import InitializeStrands to load strands
+import Enrollment.Strand; // Import the Strand class
 
 public class UserType {
     public static void user_type_menu() {
         Scanner scanner = new Scanner(System.in);
+        InitializeStrands initializeStrands = new InitializeStrands();
+
+        // Load all strands once at the beginning
+        List<Strand> strands = initializeStrands.initializeAllStrands();
 
         while (true) {
             System.out.println("MAIN MENU");
@@ -34,7 +42,9 @@ public class UserType {
 
                 case '3':
                     System.out.println("Student Dashboard Module");
-                    // Add the code for Student Dashboard Module here
+                    // Create an instance of Dashboard and pass the strands
+                    Dashboard dashboard = new Dashboard(strands);
+                    dashboard.login(); // Call the login method to start the dashboard
                     break;
 
                 case '0':

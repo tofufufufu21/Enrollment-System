@@ -55,4 +55,13 @@ public class InitializeStrands {
 
         return strands; // Return the list of all strands
     }
+
+    // Method to load available subjects for a specific strand name
+    public List<Subject> loadAvailableSubjects(String strandName) {
+        // Construct the corresponding CSV filename
+        String filename = strandName.replace(" ", "_") + ".csv"; // Example: "ABM_11" for "ABM 11"
+        Strand strand = loadStrands(filename); // Load the strand
+
+        return (strand != null) ? strand.getSubjects() : new ArrayList<>(); // Return subjects if found
+    }
 }

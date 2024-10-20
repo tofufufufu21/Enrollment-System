@@ -31,8 +31,8 @@ public class Enroll_Student {
         System.out.print("Phone Number: ");
         String phoneNumber = scanner.nextLine();
 
-        // Get the balance based on your application's logic (set a default for example)
-        double balance = 0; // Or calculate this based on logic before setting
+        // Set a default balance (adjust as needed)
+        double balance = 0;
 
         System.out.println("\nChoose strand for enrollment:");
         System.out.println("""
@@ -89,7 +89,7 @@ public class Enroll_Student {
             Strand selectedStrand = strands.get(choice - '1'); // Adjusting to index (0-based)
 
             // Create the Student object with the collected data
-            Student newStudent = new Student(lastId + 1, name, balance, phoneNumber, selectedStrand, "Unpaid"); // Create student object here
+            Student newStudent = new Student(lastId + 1, name, balance, phoneNumber, selectedStrand, "Unpaid");
 
             // Display available subjects for the selected strand and ask for enrollment
             for (Subject subject : subjects) {
@@ -133,6 +133,7 @@ public class Enroll_Student {
             studentCount[0]++;
 
             saveStudentToFile(newStudent, fileName);
+            saveNewId(lastId + 1); // Save the updated last used ID here
             System.out.println("Successfully enrolled: " + newStudent.getName());
         }
     }
@@ -212,7 +213,9 @@ public class Enroll_Student {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (!line.trim().isEmpty()) {
-                    subjects.add(new Subject(line.trim())); // Assuming Subject class takes a string for the name
+                    // Extract only the subject name
+                    String subjectName = line.split(",")[0].trim(); // Get only the subject name
+                    subjects.add(new Subject(subjectName)); // Assuming Subject class takes a string for the name
                 }
             }
         } catch (FileNotFoundException e) {
@@ -220,4 +223,5 @@ public class Enroll_Student {
         }
         return subjects;
     }
+
 }
