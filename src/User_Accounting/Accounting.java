@@ -71,8 +71,8 @@ public class Accounting {
                 String paymentStatus = studentData[4].trim();
                 double balance = Double.parseDouble(studentData[5].trim());
 
-                // Debugging statement
-                System.out.println("Selected Strand Name: " + selectedStrandName);
+                // tinanggal ko na yung debugging statement dito
+
 
                 // Load the subjects for the selected strand
                 List<Subject> subjects = loadSubjectsForStrand(selectedStrandName);

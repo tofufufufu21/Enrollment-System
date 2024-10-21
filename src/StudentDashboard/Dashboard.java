@@ -2,7 +2,7 @@ package StudentDashboard;
 
 import Enrollment.Student;
 import Enrollment.Strand;
-
+import Enrollment.Subject;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,8 +27,10 @@ public class Dashboard {
         Student student = getStudentById(studentId);
         if (student != null) {
             System.out.println("Login successful.");
+
+            // Pass the student object to the dashboard menu
             DashboardMenu menu = new DashboardMenu();
-            menu.showMenu(student); // Pass student to the dashboard menu
+            menu.showMenu(student); // Call showMenu and pass student object
         } else {
             System.out.println("Student not found. Please try again.");
         }
@@ -64,24 +66,27 @@ public class Dashboard {
     private Student createStudentFromData(String[] data) {
         int id = Integer.parseInt(data[0].trim());
         String name = data[1].trim();
-        double balance = Double.parseDouble(data[2].trim());
-        String phoneNumber = data[3].trim();
-        // Assuming Strand can be retrieved or passed accordingly
-        Strand selectedStrand = findStrandByName(data[4].trim()); // Assuming the strand name is in the CSV
-        String paymentStatus = data[5].trim();
+        String phoneNumber = data[2].trim();
+        String strandName = data[3].trim(); // Strand name from the CSV
+        String paymentStatus = data[4].trim(); // Payment status from the CSV
+        double balance = Double.parseDouble(data[5].trim()); // Balance from the CSV
 
-        return new Student(id, name, balance, phoneNumber, selectedStrand, paymentStatus);
-    }
+        // Create Strand object based on the strandName from the CSV
+        Strand selectedStrand = new Strand(strandName); // Create a new Strand object
 
-    // Method to find a Strand by name (implement according to your logic)
-    private Strand findStrandByName(String strandName) {
-        // Your logic to find and return the Strand object by its name
-        // This is a placeholder; you'll need to implement it
-        for (Strand strand : strands) {
-            if (strand.getName().equalsIgnoreCase(strandName)) {
-                return strand;
+        // Create the student object with the Strand object
+        Student student = new Student(id, name, balance, phoneNumber, selectedStrand, paymentStatus);
+
+        // Load enrolled subjects
+        if (data.length > 6) { // Check if enrolled subjects exist
+            String enrolledSubjects = data[6].trim(); // Get the enrolled subjects
+            String[] subjects = enrolledSubjects.split(";"); // Split by semicolon
+            for (String subjectName : subjects) {
+                subjectName = subjectName.replaceAll("\"", "").trim(); // Remove quotes and trim spaces
+                student.addSubject(new Subject(subjectName)); // Add subject
             }
         }
-        return null; // Return null if strand is not found
+
+        return student;
     }
 }
