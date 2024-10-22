@@ -3,7 +3,7 @@ package StudentDashboard;
 import Enrollment.Student;
 import Enrollment.Strand;
 import Enrollment.Subject;
-import java.io.*;
+
 import java.util.Scanner;
 
 public class DashboardMenu {
@@ -20,8 +20,9 @@ public class DashboardMenu {
 
         do {
             System.out.println("\n1. Display Student Details");
-            System.out.println("2. Drop or Add Subjects");
-            System.out.println("3. Exit");
+            System.out.println("2. Add Subjects");
+            System.out.println("3. Drop Subjects");
+            System.out.println("4. Exit");
             System.out.print("Please choose an option: ");
             choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
@@ -31,16 +32,20 @@ public class DashboardMenu {
                     displayStudentInfo(student);
                     break;
                 case 2:
-                    DashboardDropAddSubject subjectManager = new DashboardDropAddSubject();
-                    subjectManager.dropAddSubjects(student); // Call dropAddSubjects
+                    DashboardAddSubject subjectAdder = new DashboardAddSubject();
+                    subjectAdder.addSubject(student); // Call addSubject
                     break;
                 case 3:
+                    DashboardDropSubject subjectDropper = new DashboardDropSubject();
+                    subjectDropper.dropSubject(student); // Call dropSubject
+                    break;
+                case 4:
                     System.out.println("Exiting...");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 3);
+        } while (choice != 4);
     }
 
     private void displayStudentInfo(Student student) {
