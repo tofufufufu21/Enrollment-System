@@ -23,9 +23,12 @@ public class InitializeStrands {
             // Read each subsequent line as a subject
             String line;
             while ((line = br.readLine()) != null) {
-                String subjectName = line.trim(); // Get subject name
-                if (!subjectName.isEmpty()) {
-                    subjects.add(new Subject(subjectName)); // Create and add Subject object
+                String[] parts = line.split(","); // Split by comma
+                if (parts.length > 0) {
+                    String subjectName = parts[0].trim(); // Get subject name from the first index
+                    if (!subjectName.isEmpty()) {
+                        subjects.add(new Subject(subjectName)); // Create and add Subject object
+                    }
                 }
             }
         } catch (IOException e) {
@@ -35,7 +38,7 @@ public class InitializeStrands {
         }
 
         // Return the Strand object with subjects
-        return new Strand(strandName, subjects); // Removed grade
+        return new Strand(strandName, subjects); // Return strand name for reference
     }
 
     // Initialize strands for both grades and return as a list
