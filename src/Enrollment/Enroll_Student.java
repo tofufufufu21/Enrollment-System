@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Enroll_Student {
-    public static final int MAX_SUBJECTS = 10; // Maximum subjects a student can enroll in
+
     private static final int SUBJECT_COST = 1000; // Cost per subject
     private static final int LAB_FEE = 5000; // Example fee values
     private static final int PE_FEE = 5000;
@@ -181,7 +181,7 @@ public class Enroll_Student {
             }
 
             // Remove the last semicolon and space if any subjects were added
-            if (subjectsString.length() > 0) {
+            if (!subjectsString.isEmpty()) {
                 subjectsString.setLength(subjectsString.length() - 2); // Remove the last "; "
             }
 

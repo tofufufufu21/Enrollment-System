@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class AdminPortal {
-    private static Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static void adminPortal(String name, Student[] students, int[] studentCount) { // Use the correct Student type
         char choice;
