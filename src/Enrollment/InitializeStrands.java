@@ -9,8 +9,8 @@ import java.util.List;
 public class InitializeStrands {
 
     // Load strands from the specified CSV file
-    public Strand loadStrands(String filename) {
-        List<Subject> subjects = new ArrayList<>();
+    public Student.Strand loadStrands(String filename) {
+        List<Student.Subject> subjects = new ArrayList<>();
         String strandName = ""; // Initialize strand name
 
         // Load subjects from the specified CSV file
@@ -27,7 +27,7 @@ public class InitializeStrands {
                 if (parts.length > 0) {
                     String subjectName = parts[0].trim(); // Get subject name from the first index
                     if (!subjectName.isEmpty()) {
-                        subjects.add(new Subject(subjectName)); // Create and add Subject object
+                        subjects.add(new Student.Subject(subjectName)); // Create and add Subject object
                     }
                 }
             }
@@ -38,19 +38,19 @@ public class InitializeStrands {
         }
 
         // Return the Strand object with subjects
-        return new Strand(strandName, subjects); // Return strand name for reference
+        return new Student.Strand(strandName, subjects); // Return strand name for reference
     }
 
     // Initialize strands for both grades and return as a list
-    public List<Strand> initializeAllStrands() {
-        List<Strand> strands = new ArrayList<>();
+    public List<Student.Strand> initializeAllStrands() {
+        List<Student.Strand> strands = new ArrayList<>();
         String[] csvFiles = {
                 "ABM_11.csv", "STEM_11.csv", "HUMSS_11.csv", "GAS_11.csv",
                 "ABM_12.csv", "STEM_12.csv", "HUMSS_12.csv", "GAS_12.csv"
         };
 
         for (String csvFile : csvFiles) {
-            Strand strand = loadStrands(csvFile);
+            Student.Strand strand = loadStrands(csvFile);
             if (strand != null) {
                 strands.add(strand); // Add the loaded strand to the list
             }
@@ -60,10 +60,10 @@ public class InitializeStrands {
     }
 
     // Method to load available subjects for a specific strand name
-    public List<Subject> loadAvailableSubjects(String strandName) {
+    public List<Student.Subject> loadAvailableSubjects(String strandName) {
         // Construct the corresponding CSV filename
         String filename = strandName.replace(" ", "_") + ".csv"; // Example: "ABM_11" for "ABM 11"
-        Strand strand = loadStrands(filename); // Load the strand
+        Student.Strand strand = loadStrands(filename); // Load the strand
 
         return (strand != null) ? strand.getSubjects() : new ArrayList<>(); // Return subjects if found
     }

@@ -1,7 +1,6 @@
 package StudentDashboard;
 
 import Enrollment.Student;
-import Enrollment.Subject;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,36 +12,46 @@ public class DashboardDropSubject {
     private static final int SUBJECT_COST = 1000; // Deduction for each dropped subject
 
     public void dropSubject(Student student) {
-        System.out.println("Current Enrolled Subjects:");
-        if (student.getEnrolledSubjects().isEmpty()) {
-            System.out.println("No subjects enrolled.");
-            return;
-        }
+        boolean dropMore = true; // Control variable for dropping multiple subjects
 
-        for (Subject subject : student.getEnrolledSubjects()) {
-            System.out.println("- " + subject.getSubjectName());
-        }
+        while (dropMore) {
+            System.out.println("Current Enrolled Subjects:");
+            if (student.getEnrolledSubjects().isEmpty()) {
+                System.out.println("No subjects enrolled.");
+                return;
+            }
 
-        System.out.print("Enter the name of the subject to drop: ");
-        String dropSubject = scanner.nextLine().trim();
+            for (Student.Subject subject : student.getEnrolledSubjects()) {
+                System.out.println("- " + subject.getSubjectName());
+            }
 
-        // Check if the student is currently enrolled in the selected subject
-        boolean isEnrolledForDrop = student.getEnrolledSubjects().stream()
-                .anyMatch(subject -> subject.getSubjectName().trim().equalsIgnoreCase(dropSubject));
+            System.out.print("Enter the name of the subject to drop: ");
+            String dropSubject = scanner.nextLine().trim();
 
-        if (isEnrolledForDrop) {
-            // Remove the subject from the student's enrolled subjects
-            student.getEnrolledSubjects().removeIf(subject -> subject.getSubjectName().trim().equalsIgnoreCase(dropSubject));
+            // Check if the student is currently enrolled in the selected subject
+            boolean isEnrolledForDrop = student.getEnrolledSubjects().stream()
+                    .anyMatch(subject -> subject.getSubjectName().trim().equalsIgnoreCase(dropSubject));
 
-            // Deduct the subject cost from the student's balance
-            student.setBalance(student.getBalance() - SUBJECT_COST);
-            System.out.println("Successfully dropped " + dropSubject);
-            System.out.println("Updated balance: " + student.getBalance());
+            if (isEnrolledForDrop) {
+                // Remove the subject from the student's enrolled subjects
+                student.getEnrolledSubjects().removeIf(subject -> subject.getSubjectName().trim().equalsIgnoreCase(dropSubject));
 
-            // Save the updated student data to the file
-            saveStudentToFile(student, student.getSelectedStrand().getName());
-        } else {
-            System.out.println("You are not enrolled in " + dropSubject + ".");
+                // Deduct the subject cost from the student's balance
+                student.setBalance(student.getBalance() - SUBJECT_COST);
+                System.out.println("Successfully dropped " + dropSubject);
+                System.out.println("Updated balance: " + student.getBalance());
+
+                // Save the updated student data to the file
+                saveStudentToFile(student, student.getSelectedStrand().getName());
+
+                // Ask if the user wants to drop more subjects
+                System.out.print("Do you want to drop another subject? (yes/no): ");
+                String response = scanner.nextLine().trim().toLowerCase();
+                dropMore = response.equals("yes");
+            } else {
+                System.out.println("You are not enrolled in " + dropSubject + ".");
+                dropMore = false; // Exit loop if subject is not found
+            }
         }
     }
 
@@ -57,7 +66,7 @@ public class DashboardDropSubject {
 
             // Prepare the enrolled subjects string
             StringBuilder subjectsString = new StringBuilder();
-            for (Subject subject : student.getEnrolledSubjects()) {
+            for (Student.Subject subject : student.getEnrolledSubjects()) {
                 if (subject != null) {
                     subjectsString.append(subject.getSubjectName()).append("; ");
                 }

@@ -4,8 +4,6 @@ import java.io.*;
 import java.util.Scanner;
 import Enrollment.Student;
 import Enrollment.InitializeStrands;
-import Enrollment.Strand;
-import Enrollment.Subject;
 import User_Types.UserType;
 
 public class StudentAccounting {
@@ -68,14 +66,14 @@ public class StudentAccounting {
                 String enrolledSubjects = studentData.length > 6 ? studentData[6].trim() : "";
 
                 // Load the strand with subjects
-                Strand selectedStrand = loadStrand(selectedStrandName);
+                Student.Strand selectedStrand = loadStrand(selectedStrandName);
                 Student student = new Student(id, name, balance, phoneNumber, selectedStrand, paymentStatus);
 
                 // Load enrolled subjects if any
                 if (!enrolledSubjects.isEmpty()) {
                     String[] subjects = enrolledSubjects.split(";");
                     for (String subjectName : subjects) {
-                        student.addSubject(new Subject(subjectName.trim()));
+                        student.addSubject(new Student.Subject(subjectName.trim()));
                     }
                 }
 
@@ -89,7 +87,7 @@ public class StudentAccounting {
         return null;
     }
 
-    private Strand loadStrand(String strandName) {
+    private Student.Strand loadStrand(String strandName) {
         String fileName = strandName + ".csv";
         return initializeStrands.loadStrands(fileName);
     }

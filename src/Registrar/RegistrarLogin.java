@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import Admin_Portal.AdminPortal;
 import Enrollment.InitializeStrands;
-import Enrollment.Strand;
 import Enrollment.Student;
 
 public class RegistrarLogin {
@@ -47,7 +46,7 @@ public class RegistrarLogin {
         int attempts = 0;
 
         InitializeStrands initializeStrands = new InitializeStrands();
-        List<Strand> strands = initializeStrands.initializeAllStrands();
+        List<Student.Strand> strands = initializeStrands.initializeAllStrands();
         Student[] students = new Student[100];
         int[] studentCount = new int[1];
 

@@ -18,7 +18,7 @@ public class Enroll_Student {
     private static final int LIBRARY_FEE = 5000;
     private static final int WATER_ENERGY_FEE = 5000;
 
-    public void enrollStudent(List<Strand> strands, Student[] students, int[] studentCount) {
+    public void enrollStudent(List<Student.Strand> strands, Student[] students, int[] studentCount) {
         Scanner scanner = new Scanner(System.in);
         char confirmation;
         int lastId = loadLastUsedId();
@@ -77,7 +77,7 @@ public class Enroll_Student {
             System.out.println("1000 Pesos per subject");
 
             // Attempt to read the correct file for subjects
-            List<Subject> subjects = loadSubjectsFromCSV(fileName);
+            List<Student.Subject> subjects = loadSubjectsFromCSV(fileName);
 
             // Check if subjects were loaded
             if (subjects.isEmpty()) {
@@ -86,13 +86,13 @@ public class Enroll_Student {
             }
 
             // Set the selected strand in the newStudent
-            Strand selectedStrand = strands.get(choice - '1'); // Adjusting to index (0-based)
+            Student.Strand selectedStrand = strands.get(choice - '1'); // Adjusting to index (0-based)
 
             // Create the Student object with the collected data
             Student newStudent = new Student(lastId + 1, name, balance, phoneNumber, selectedStrand, "Unpaid");
 
             // Display available subjects for the selected strand and ask for enrollment
-            for (Subject subject : subjects) {
+            for (Student.Subject subject : subjects) {
                 System.out.printf("Do you want to enroll in \"%s\"? (y/n): ", subject.getSubjectName());
                 char enroll = scanner.next().charAt(0);
                 scanner.nextLine();
@@ -174,7 +174,7 @@ public class Enroll_Student {
 
             // Prepare the enrolled subjects string
             StringBuilder subjectsString = new StringBuilder();
-            for (Subject subject : student.getEnrolledSubjects()) {
+            for (Student.Subject subject : student.getEnrolledSubjects()) {
                 if (subject != null) { // Check for null to avoid NullPointerException
                     subjectsString.append(subject.getSubjectName()).append("; "); // Separate subjects with a semicolon
                 }
@@ -203,8 +203,8 @@ public class Enroll_Student {
         }
     }
 
-    private List<Subject> loadSubjectsFromCSV(String fileName) {
-        List<Subject> subjects = new ArrayList<>();
+    private List<Student.Subject> loadSubjectsFromCSV(String fileName) {
+        List<Student.Subject> subjects = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File(fileName))) {
             if (scanner.hasNextLine()) {
                 scanner.nextLine(); // Skip the header line
@@ -215,7 +215,7 @@ public class Enroll_Student {
                 if (!line.trim().isEmpty()) {
                     // Extract only the subject name
                     String subjectName = line.split(",")[0].trim(); // Get only the subject name
-                    subjects.add(new Subject(subjectName)); // Assuming Subject class takes a string for the name
+                    subjects.add(new Student.Subject(subjectName)); // Assuming Subject class takes a string for the name
                 }
             }
         } catch (FileNotFoundException e) {

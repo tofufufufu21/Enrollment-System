@@ -1,8 +1,6 @@
 package StudentDashboard;
 
 import Enrollment.Student;
-import Enrollment.Strand;
-import Enrollment.Subject;
 
 import java.util.Scanner;
 
@@ -53,7 +51,7 @@ public class DashboardMenu {
         System.out.println("Name: " + student.getName());
         System.out.println("Phone Number: " + student.getPhoneNumber());
 
-        Strand selectedStrand = student.getSelectedStrand();
+        Student.Strand selectedStrand = student.getSelectedStrand();
         System.out.println("Strand: " + (selectedStrand != null ? selectedStrand.getName() : "Unknown Strand"));
         System.out.println("Payment Status: " + student.getPaymentStatus());
         System.out.printf("Remaining Balance: %.2f%n", student.getBalance());
@@ -61,7 +59,7 @@ public class DashboardMenu {
         // Display enrolled subjects
         System.out.println("Enrolled Subjects:");
         if (!student.getEnrolledSubjects().isEmpty()) {
-            for (Subject subject : student.getEnrolledSubjects()) {
+            for (Student.Subject subject : student.getEnrolledSubjects()) {
                 System.out.println("- " + subject.getSubjectName());
             }
         } else {

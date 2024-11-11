@@ -2,11 +2,13 @@ package User_Types;
 
 import java.util.List; // Import List
 import java.util.Scanner;
+
+import Enrollment.Student;
 import Registrar.*;
 import User_Accounting.Accounting; // Import the Accounting class
 import StudentDashboard.Dashboard; // Import the Dashboard class
 import Enrollment.InitializeStrands; // Import InitializeStrands to load strands
-import Enrollment.Strand; // Import the Strand class
+
 
 public class UserType {
     public static void user_type_menu() {
@@ -14,7 +16,7 @@ public class UserType {
         InitializeStrands initializeStrands = new InitializeStrands();
 
         // Load all strands once at the beginning
-        List<Strand> strands = initializeStrands.initializeAllStrands();
+        List<Student.Strand> strands = initializeStrands.initializeAllStrands();
 
         while (true) {
             System.out.println("MAIN MENU");

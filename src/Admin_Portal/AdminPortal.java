@@ -6,7 +6,6 @@ import Enrollment.SearchStudent;
 import Enrollment.EditStudent;
 import Enrollment.DeleteStudent;
 import Enrollment.InitializeStrands;
-import Enrollment.Strand;
 import Enrollment.Student; // Import the Student class from the Enrollment package
 
 import java.util.InputMismatchException;
@@ -25,7 +24,7 @@ public class AdminPortal {
 
         InitializeStrands initializeStrands = new InitializeStrands();
         // Load all strands without grade parameter
-        List<Strand> strands = initializeStrands.initializeAllStrands();
+        List<Student.Strand> strands = initializeStrands.initializeAllStrands();
 
         while (true) {
             System.out.println("Welcome, " + name + "!\n");

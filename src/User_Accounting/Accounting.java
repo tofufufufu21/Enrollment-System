@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import Enrollment.Student;
-import Enrollment.Strand;
-import Enrollment.Subject;
 import User_Types.UserType;
 
 public class Accounting {
@@ -75,10 +73,10 @@ public class Accounting {
 
 
                 // Load the subjects for the selected strand
-                List<Subject> subjects = loadSubjectsForStrand(selectedStrandName);
+                List<Student.Subject> subjects = loadSubjectsForStrand(selectedStrandName);
 
                 // Create the Strand object
-                Strand strand = new Strand(selectedStrandName, subjects);
+                Student.Strand strand = new Student.Strand(selectedStrandName, subjects);
 
                 // Create the Student object
                 Student student = new Student(id, name, balance, phoneNumber, strand, paymentStatus);
@@ -87,7 +85,7 @@ public class Accounting {
                 if (studentData.length > 6) { // Check if there are enrolled subjects
                     String[] enrolledSubjects = studentData[6].trim().split(";");
                     for (String subjectName : enrolledSubjects) {
-                        student.addSubject(new Subject(subjectName.trim()));
+                        student.addSubject(new Student.Subject(subjectName.trim()));
                     }
                 }
 
@@ -101,8 +99,8 @@ public class Accounting {
         return null;
     }
 
-    private List<Subject> loadSubjectsForStrand(String strandName) {
-        List<Subject> subjects = new ArrayList<>();
+    private List<Student.Subject> loadSubjectsForStrand(String strandName) {
+        List<Student.Subject> subjects = new ArrayList<>();
         String fileName = strandName + ".csv";
 
         File file = new File(fileName);
@@ -117,7 +115,7 @@ public class Accounting {
             String line;
             while ((line = reader.readLine()) != null) {
                 String subjectName = line.trim();
-                subjects.add(new Subject(subjectName));
+                subjects.add(new Student.Subject(subjectName));
             }
         } catch (IOException e) {
             System.out.println("Error reading strand file: " + e.getMessage());

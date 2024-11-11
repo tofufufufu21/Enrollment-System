@@ -1,8 +1,7 @@
 package StudentDashboard;
 
 import Enrollment.Student;
-import Enrollment.Strand;
-import Enrollment.Subject;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,10 +10,10 @@ import java.util.Scanner;
 
 public class Dashboard {
     private static Scanner scanner = new Scanner(System.in);
-    private List<Strand> strands; // To hold strands
+    private List<Student.Strand> strands; // To hold strands
 
     // Constructor that accepts strands
-    public Dashboard(List<Strand> strands) {
+    public Dashboard(List<Student.Strand> strands) {
         this.strands = strands; // Initialize the strands
     }
 
@@ -72,7 +71,7 @@ public class Dashboard {
         double balance = Double.parseDouble(data[5].trim()); // Balance from the CSV
 
         // Create Strand object based on the strandName from the CSV
-        Strand selectedStrand = new Strand(strandName); // Create a new Strand object
+        Student.Strand selectedStrand = new Student.Strand(strandName); // Create a new Strand object
 
         // Create the student object with the Strand object
         Student student = new Student(id, name, balance, phoneNumber, selectedStrand, paymentStatus);
@@ -83,7 +82,7 @@ public class Dashboard {
             String[] subjects = enrolledSubjects.split(";"); // Split by semicolon
             for (String subjectName : subjects) {
                 subjectName = subjectName.replaceAll("\"", "").trim(); // Remove quotes and trim spaces
-                student.addSubject(new Subject(subjectName)); // Add subject
+                student.addSubject(new Student.Subject(subjectName)); // Add subject
             }
         }
 

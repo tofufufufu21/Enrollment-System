@@ -2,7 +2,6 @@ package StudentDashboard;
 
 import Enrollment.InitializeStrands;
 import Enrollment.Student;
-import Enrollment.Subject;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,88 +16,122 @@ public class DashboardAddSubject {
     private static final int SUBJECT_COST = 1000; // Addition for each added subject
 
     public void addSubject(Student student) {
-        // Get the strand name from the selected strand of the student
         String strandName = student.getSelectedStrand().getName();
-
-        // Load available subjects for the selected strand
-        List<Subject> availableSubjects = initializeStrands.loadAvailableSubjects(strandName);
+        List<Student.Subject> availableSubjects = initializeStrands.loadAvailableSubjects(strandName);
 
         if (availableSubjects.isEmpty()) {
             System.out.println("No subjects available for this strand.");
             return;
         }
 
-        // Get the subjects the student is currently enrolled in
+        // Get the list of already enrolled subjects
         List<String> enrolledSubjectNames = student.getEnrolledSubjects().stream()
-                .map(Subject::getSubjectName)
-                .map(this::cleanSubjectName) // Clean subject names before comparison
+                .map(Student.Subject::getSubjectName)
+                .map(this::cleanSubjectName)
                 .collect(Collectors.toList());
 
-        // Filter available subjects to only those the student is not enrolled in
-        List<Subject> notEnrolledSubjects = availableSubjects.stream()
-                .filter(subject -> !enrolledSubjectNames.contains(cleanSubjectName(subject.getSubjectName()))) // Clean subject names
+        // Filter out subjects that the student has already enrolled in
+        List<Student.Subject> notEnrolledSubjects = availableSubjects.stream()
+                .filter(subject -> !enrolledSubjectNames.contains(cleanSubjectName(subject.getSubjectName())))
                 .collect(Collectors.toList());
 
-        // Check if there are any subjects to add
         if (notEnrolledSubjects.isEmpty()) {
             System.out.println("You are already enrolled in all available subjects for your strand.");
             return;
         }
 
-        // Display student's enrolled subjects
         displayEnrolledSubjects(student.getEnrolledSubjects());
 
-        // Display subjects that the student is not enrolled in
-        displayNotEnrolledSubjects(notEnrolledSubjects);
+        boolean addMore = true;
+        while (addMore) {
+            // Check if there are no more subjects to enroll in
+            if (notEnrolledSubjects.isEmpty()) {
+                System.out.println("All subjects have been enrolled. Exiting.");
+                break;
+            }
 
-        System.out.print("Enter the name of the subject to add: ");
-        String addSubject = scanner.nextLine().trim(); // Trim user input
+            displayNotEnrolledSubjects(notEnrolledSubjects);
 
-        // Clean up and remove any unwanted characters (quotes, commas) from the user input
-        String cleanAddSubject = cleanSubjectName(addSubject); // Clean user input
+            System.out.print("Enter the name of the subject to add: ");
+            String addSubject = scanner.nextLine().trim();
+            String cleanAddSubject = cleanSubjectName(addSubject);
 
-        // Check if the subject is available to add
-        boolean isAvailableForAdd = notEnrolledSubjects.stream()
-                .anyMatch(subject -> cleanSubjectName(subject.getSubjectName()).equalsIgnoreCase(cleanAddSubject));
+            // Check if the subject is already enrolled
+            if (enrolledSubjectNames.contains(cleanAddSubject)) {
+                System.out.println(cleanAddSubject + " is already enrolled.");
+                System.out.print("Do you want to add another subject? (yes/no): ");
+                String response = scanner.nextLine().trim().toLowerCase();
+                addMore = response.equals("yes");
+                continue; // Skip the current iteration if subject is already enrolled
+            }
 
-        if (isAvailableForAdd) {
-            // Add the subject to the student's enrolled subjects
-            student.addSubject(new Subject(cleanAddSubject));
+            boolean isAvailableForAdd = notEnrolledSubjects.stream()
+                    .anyMatch(subject -> cleanSubjectName(subject.getSubjectName()).equalsIgnoreCase(cleanAddSubject));
 
-            // Add the subject cost to the student's balance
-            student.setBalance(student.getBalance() + SUBJECT_COST);
-            System.out.println("Successfully added " + cleanAddSubject);
-            System.out.println("Updated balance: " + student.getBalance());
+            if (isAvailableForAdd) {
+                student.addSubject(new Student.Subject(cleanAddSubject));
+                student.setBalance(student.getBalance() + SUBJECT_COST);
+                System.out.println("Successfully added " + cleanAddSubject);
+                System.out.println("Updated balance: " + student.getBalance());
+                saveStudentToFile(student, strandName);
 
-            // Save the updated student data to the file
-            saveStudentToFile(student, strandName);
-        } else {
-            System.out.println(cleanAddSubject + " is not available.");
+                // Re-calculate notEnrolledSubjects after adding a new subject
+                enrolledSubjectNames.add(cleanAddSubject); // Add the newly enrolled subject to the list
+                notEnrolledSubjects = availableSubjects.stream()
+                        .filter(subject -> !enrolledSubjectNames.contains(cleanSubjectName(subject.getSubjectName())))
+                        .collect(Collectors.toList());
+
+                System.out.print("Do you want to add another subject? (yes/no): ");
+                String response = scanner.nextLine().trim().toLowerCase();
+                addMore = response.equals("yes");
+            } else {
+                System.out.println(cleanAddSubject + " is not available for enrollment.");
+                System.out.print("Do you want to add another subject? (yes/no): ");
+                String response = scanner.nextLine().trim().toLowerCase();
+                addMore = response.equals("yes");
+            }
         }
     }
 
+
     // Helper method to clean the subject names by removing unwanted characters
     private String cleanSubjectName(String subjectName) {
-        return subjectName.replaceAll("[\"',]", "").trim(); // Remove quotes, commas, and trim
+        // Remove quotes and unnecessary spaces
+        subjectName = subjectName.replace("\"", "").trim();
+
+        String[] words = subjectName.split(" "); // Split the input into words
+        StringBuilder cleanedSubjectName = new StringBuilder();
+
+        // Iterate over each word, capitalizing the first letter
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                cleanedSubjectName.append(word.substring(0, 1).toUpperCase()) // Capitalize the first letter
+                        .append(word.substring(1).toLowerCase()) // Keep the rest of the word in lowercase
+                        .append(" "); // Add space between words
+            }
+        }
+
+        return cleanedSubjectName.toString().trim(); // Return the cleaned and formatted subject name
     }
 
     // Helper method to display enrolled subjects
-    private void displayEnrolledSubjects(List<Subject> enrolledSubjects) {
+    private void displayEnrolledSubjects(List<Student.Subject> enrolledSubjects) {
         System.out.println("Enrolled Subjects:");
         if (enrolledSubjects.isEmpty()) {
             System.out.println("No subjects enrolled.");
         } else {
-            for (Subject subject : enrolledSubjects) {
+            for (Student.Subject subject : enrolledSubjects) {
                 System.out.println("- " + subject.getSubjectName());
             }
         }
     }
 
     // Helper method to display subjects that the student is not enrolled in
-    private void displayNotEnrolledSubjects(List<Subject> notEnrolledSubjects) {
+    private void displayNotEnrolledSubjects(List<Student.Subject> notEnrolledSubjects) {
         System.out.println("Subjects Available for Enrollment:");
-        for (Subject subject : notEnrolledSubjects) {
-            System.out.println("- " + cleanSubjectName(subject.getSubjectName())); // Clean before display
+        for (Student.Subject subject : notEnrolledSubjects) {
+            // Display the subject name as it is, without modification
+            System.out.println("- " + subject.getSubjectName());
         }
         System.out.println(); // Add a blank line for better readability
     }
@@ -114,7 +147,7 @@ public class DashboardAddSubject {
 
             // Prepare the enrolled subjects string
             StringBuilder subjectsString = new StringBuilder();
-            for (Subject subject : student.getEnrolledSubjects()) {
+            for (Student.Subject subject : student.getEnrolledSubjects()) {
                 if (subject != null) {
                     subjectsString.append(subject.getSubjectName()).append("; ");
                 }
