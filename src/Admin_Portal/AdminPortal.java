@@ -15,19 +15,18 @@ import java.util.Scanner;
 public class AdminPortal {
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void adminPortal(String name, Student[] students, int[] studentCount) { // Use the correct Student type
+    public static void adminPortal(String name, Student[] students, int[] studentCount) {
         char choice;
         Enroll_Student enrollStudent = new Enroll_Student();
         ShowAllStudents showAllStudents = new ShowAllStudents();
         SearchStudent searchStudent = new SearchStudent();
         EditStudent editStudent = new EditStudent();
-
         InitializeStrands initializeStrands = new InitializeStrands();
-        // Load all strands without grade parameter
+
         List<Student.Strand> strands = initializeStrands.initializeAllStrands();
 
         while (true) {
-            System.out.println("Welcome, " + name + "!\n");
+            System.out.println("\nWelcome, " + name + "!\n");
             System.out.println("REGISTRAR DASHBOARD");
             System.out.println("1. Enroll a New Student");
             System.out.println("2. Show all Students");
@@ -41,7 +40,6 @@ public class AdminPortal {
 
             switch (choice) {
                 case '1':
-                    // Call enrollStudent with List<Strand>
                     enrollStudent.enrollStudent(strands, students, studentCount);
                     break;
                 case '2':
@@ -51,15 +49,7 @@ public class AdminPortal {
                     break;
                 case '3':
                     System.out.println("Searching a student...");
-                    System.out.print("Enter Student ID to search: ");
-                    try {
-                        int studentId = scanner.nextInt();
-                        searchStudent.searchStudentById(studentId);
-                    } catch (InputMismatchException e) {
-                        System.out.println("Invalid input! Please enter a valid Student ID.");
-                        scanner.nextLine(); // Clear invalid input
-                    }
-                    pressAnyKey();
+                    searchStudent.searchStudentById();  // No need to ask for ID here, it will be handled in the SearchStudent class
                     break;
                 case '4':
                     System.out.println("Editing student information...");
@@ -67,21 +57,12 @@ public class AdminPortal {
                     pressAnyKey();
                     break;
                 case '5':
-                    System.out.println("Do you really want to delete a student? (y/n): ");
-                    char option = scanner.next().charAt(0);
-                    if (option == 'y' || option == 'Y') {
-                        DeleteStudent deleteStudent = new DeleteStudent();
-                        deleteStudent.deleteStudent();
-                    } else if (option == 'n' || option == 'N') {
-                        pressAnyKey();
-                    } else {
-                        System.out.println("Invalid option.");
-                        pressAnyKey();
-                    }
+                    DeleteStudent deleteStudent = new DeleteStudent();
+                    deleteStudent.deleteStudent();  // Calls the method for confirmation and deletion
                     break;
                 case '0':
                     System.out.println("Do you really want to log out? (y/n): ");
-                    option = scanner.next().charAt(0);
+                    char option = scanner.next().charAt(0);
                     if (option == 'y' || option == 'Y') {
                         return; // Log out
                     } else if (option == 'n' || option == 'N') {
@@ -103,3 +84,4 @@ public class AdminPortal {
         scanner.nextLine();
     }
 }
+

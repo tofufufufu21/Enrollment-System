@@ -2,69 +2,43 @@ package Enrollment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SearchStudent {
 
-    public void searchStudentById(int studentId) {
-        String fileName = "student_" + studentId + ".csv"; // Construct the filename for the student
-        File file = new File(fileName);
+    public void searchStudentById() {
+        Scanner scanner = new Scanner(System.in);  // Re-use scanner
+        int studentId = 0;
 
-        if (!file.exists()) {
-            System.out.println("Student with ID " + studentId + " not found.");
-            pressAnyKey();
-            return;
-        }
-
-        try (Scanner scanner = new Scanner(file)) {
-            if (scanner.hasNextLine()) {
-                // Skip the header line
-                scanner.nextLine(); // Read and ignore the header
-
-                if (scanner.hasNextLine()) {
-                    String studentData = scanner.nextLine(); // Read the student data
-                    String[] data = studentData.split(","); // Split the student data into fields
-                    System.out.printf("Student ID %d Found\n", studentId);
-                    System.out.println("Student Data:");
-                    System.out.println("ID: " + data[0]);
-                    System.out.println("Name: " + data[1]);
-                    System.out.println("Phone Number: " + data[2]);
-                    System.out.println("Strand: " + data[3]);
-                    System.out.println("Payment Status: " + data[4]);
-                    System.out.println("Balance: " + data[5]);
-                    // Add any other relevant fields here
+        while (true) {  // Loop to continuously ask for student ID
+            // Ensure the input is a valid integer
+            while (true) {
+                System.out.print("Enter Student ID to search: ");
+                try {
+                    studentId = scanner.nextInt();  // Get student ID here
+                    break; // Exit the loop if input is valid
+                } catch (InputMismatchException e) {
+                    System.out.println("\nInvalid input! Please enter a valid integer for the Student ID.\n");
+                    scanner.nextLine(); // Clear the invalid input
                 }
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("Error opening file: " + e.getMessage());
-        }
-        pressAnyKey(); // Wait for user input after displaying student data
-    }
 
-    public void searchStudentByName(String studentName) {
-        File folder = new File("."); // Current directory
-        File[] files = folder.listFiles((dir, name) -> name.startsWith("student_") && name.endsWith(".csv"));
+            String fileName = "student_" + studentId + ".csv"; // Construct the filename for the student
+            File file = new File(fileName);
 
-        if (files == null || files.length == 0) {
-            System.out.println("No student records found.");
-            pressAnyKey();
-            return;
-        }
+            if (!file.exists()) {
+                System.out.println("Student with ID " + studentId + " not found.");
+            } else {
+                try (Scanner fileScanner = new Scanner(file)) {
+                    if (fileScanner.hasNextLine()) {
+                        // Skip the header line
+                        fileScanner.nextLine(); // Read and ignore the header
 
-        boolean found = false;
-
-        for (File file : files) {
-            try (Scanner scanner = new Scanner(file)) {
-                if (scanner.hasNextLine()) {
-                    // Skip the header line
-                    scanner.nextLine(); // Read and ignore the header
-
-                    if (scanner.hasNextLine()) {
-                        String studentData = scanner.nextLine(); // Read student data
-                        String[] data = studentData.split(","); // Split the student data into fields
-
-                        if (data[1].equalsIgnoreCase(studentName)) {
-                            System.out.printf("Student ID %s Found\n", data[0]); // Using ID from data
+                        if (fileScanner.hasNextLine()) {
+                            String studentData = fileScanner.nextLine(); // Read the student data
+                            String[] data = studentData.split(","); // Split the student data into fields
+                            System.out.printf("Student ID %d Found\n", studentId);
                             System.out.println("Student Data:");
                             System.out.println("ID: " + data[0]);
                             System.out.println("Name: " + data[1]);
@@ -72,26 +46,21 @@ public class SearchStudent {
                             System.out.println("Strand: " + data[3]);
                             System.out.println("Payment Status: " + data[4]);
                             System.out.println("Balance: " + data[5]);
-                            // Add any other relevant fields here
-                            found = true;
                         }
                     }
+                } catch (FileNotFoundException e) {
+                    System.out.println("Error opening file: " + e.getMessage());
                 }
-            } catch (FileNotFoundException e) {
-                System.out.println("Error opening file: " + e.getMessage());
             }
-        }
 
-        if (!found) {
-            System.out.println("No student found with the name: " + studentName);
+            pressAnyKey(); // Wait for user input after displaying student data or error
         }
-        pressAnyKey(); // Wait for user input after search
     }
 
     // Method to simulate "Press any key to continue"
     private void pressAnyKey() {
         System.out.println("Press Enter to continue...");
         Scanner scanner = new Scanner(System.in); // Create a new Scanner for user input
-        scanner.nextLine();
+        scanner.nextLine();  // Wait for the user to press Enter
     }
 }

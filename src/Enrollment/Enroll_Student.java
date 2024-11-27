@@ -25,11 +25,30 @@ public class Enroll_Student {
 
         System.out.println("ENROLL A NEW STUDENT\n");
 
-        System.out.print("Enter Name: ");
-        String name = scanner.nextLine();
+        String name;
+        while (true) {
+            System.out.print("Enter Name: ");
+            name = scanner.nextLine();
+            if (name.matches(".*\\d.*")) {
+                System.out.println("Warning: Numbers are not allowed in the name. Press Enter to try again...");
+                scanner.nextLine();
+            } else {
+                break;
+            }
+        }
 
-        System.out.print("Phone Number: ");
-        String phoneNumber = scanner.nextLine();
+        // Phone number validation loop
+        String phoneNumber;
+        while (true) {
+            System.out.print("Phone Number: ");
+            phoneNumber = scanner.nextLine();
+            if (!phoneNumber.matches("\\d{11}")) {
+                System.out.println("Warning: Phone number must be 11 digits and contain only numbers. Press Enter to try again...");
+                scanner.nextLine();
+            } else {
+                break;
+            }
+        }
 
         // Set a default balance (adjust as needed)
         double balance = 0;
@@ -47,9 +66,25 @@ public class Enroll_Student {
                 8. GAS 12
                 0. Cancel enrollment""");
 
-        System.out.print("\nEnter Choice: ");
-        char choice = scanner.next().charAt(0);
-        scanner.nextLine();
+        char choice;
+        while (true) {
+            System.out.print("\nEnter Choice (or '0' to cancel and return): ");
+            String input = scanner.nextLine().trim(); // Read the entire input and trim whitespace
+
+            if (input.equals("0")) {
+                System.out.println("Enrollment canceled. Returning...\n");
+                return; // Exit the method or loop
+            }
+
+            if (input.length() == 1 && Character.isDigit(input.charAt(0))) {
+                choice = input.charAt(0); // Get the first character if it's a valid digit
+                break; // Exit the loop if valid
+            }
+
+            // Print invalid message without re-prompting
+            System.out.println("Invalid choice. Please enter a valid number or '0' to cancel.");
+        }
+
 
         // Select the strand based on the choice
         String fileName = switch (choice) {
@@ -91,16 +126,27 @@ public class Enroll_Student {
             // Create the Student object with the collected data
             Student newStudent = new Student(lastId + 1, name, balance, phoneNumber, selectedStrand, "Unpaid");
 
+
+
             // Display available subjects for the selected strand and ask for enrollment
             for (Student.Subject subject : subjects) {
-                System.out.printf("Do you want to enroll in \"%s\"? (y/n): ", subject.getSubjectName());
-                char enroll = scanner.next().charAt(0);
-                scanner.nextLine();
+                boolean validInput = false;
+                while (!validInput) {
+                    System.out.printf("Do you want to enroll in \"%s\"? (y/n): ", subject.getSubjectName());
+                    char enroll = scanner.next().charAt(0);
+                    scanner.nextLine();  // Consume the newline
 
-                if (enroll == 'y' || enroll == 'Y') {
-                    newStudent.addSubject(subject); // Make sure this method is defined in the Student class
+                    if (enroll == 'y' || enroll == 'Y') {
+                        newStudent.addSubject(subject); // Make sure this method is defined in the Student class
+                        validInput = true;
+                    } else if (enroll == 'n' || enroll == 'N') {
+                        validInput = true;
+                    } else {
+                        System.out.println("Invalid input. Please enter 'y' for yes or 'n' for no.");
+                    }
                 }
             }
+
 
             if (newStudent.getNumEnrolledSubjects() == 0) {
                 System.out.println("You didn't enroll in at least one subject. Enrollment cancelled.");
