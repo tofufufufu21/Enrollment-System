@@ -1,5 +1,6 @@
 package Enrollment;
 
+import java.sql.SQLOutput;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -158,6 +159,13 @@ public class Enroll_Student {
 
             do {
                 System.out.printf("\nTotal Subject cost (including additional fees): %.2f\n", totalCost);
+                System.out.println("\nLAB_FEE = 5000₱\nPE_FEE = 5000₱\nIMMERSION_FEE = 5000₱\nLIBRARY_FEE = 5000₱\nWATER_ENERGY_FEE = 5000₱\n");
+                // Display enrolled subjects
+                System.out.println("Subjects you have enrolled in:");
+                for (Student.Subject subject : newStudent.getEnrolledSubjects()) {
+                    System.out.println(" - " + subject.getSubjectName());
+                }
+
                 System.out.print("\nAre you sure you want to enroll? (y/n): ");
                 confirmation = scanner.next().charAt(0);
                 scanner.nextLine();
@@ -180,7 +188,7 @@ public class Enroll_Student {
 
             saveStudentToFile(newStudent, fileName);
             saveNewId(lastId + 1); // Save the updated last used ID here
-            System.out.println("Successfully enrolled: " + newStudent.getName());
+
         }
     }
 
@@ -271,3 +279,4 @@ public class Enroll_Student {
     }
 
 }
+
