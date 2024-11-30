@@ -7,18 +7,30 @@ import java.util.Scanner;
 import Enrollment.Student;
 import User_Types.UserType;
 
+
 public class Accounting {
     private static Scanner scanner = new Scanner(System.in);
 
     public void studentLogin() {
-        System.out.print("Please enter your Student ID: ");
-        int studentId = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int studentId = 0;
+        boolean validInput = false;
+
+        while (!validInput) {
+            try {
+                System.out.print("Please enter your Student ID: ");
+                studentId = Integer.parseInt(scanner.nextLine().trim()); // Parse input as integer
+                validInput = true; // Exit loop if input is valid
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid numeric Student ID.");
+                Student.pressAnyKey(); // Wait for user to press any key before retrying
+            }
+        }
 
         // Check if the student exists and get their details
         Student student = getStudentDetails(studentId);
         if (student == null) {
             System.out.println("Student not found.");
+            Student.pressAnyKey();
             return;
         }
 
@@ -26,7 +38,7 @@ public class Accounting {
         if (student.getBalance() == 0) {
             System.out.println("You are already fully paid.");
             promptReturnToMenu();
-            return; // Exit if fully paid
+            return;
         } else {
             // Print student information
             displayStudentInfo(student);

@@ -32,6 +32,7 @@ public class EditStudent {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("\nInvalid input. Please enter a valid integer for the student ID.");
+                Student.pressAnyKey();
                 scanner.nextLine(); // Consume the invalid input and let the loop continue
             }
         }

@@ -2,6 +2,7 @@ package Enrollment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Student {
     // Constants
@@ -127,6 +128,11 @@ public class Student {
         public String getSubjectName() {
             return subjectName;
         }
+    }
+    public static void pressAnyKey() {
+        System.out.println("Press Enter to continue...");
+        Scanner scanner = new Scanner(System.in); // Create a new Scanner for user input
+        scanner.nextLine();  // Wait for the user to press Enter
     }
 }
 

@@ -167,9 +167,5 @@ public class DeleteStudent {
         }
     }
 
-    private void pressAnyKey() {
-        System.out.println("Press Enter to continue...");
-        Scanner scanner = new Scanner(System.in); // Create a new Scanner for user input
-        scanner.nextLine();  // Wait for the user to press Enter
-    }
+
 }

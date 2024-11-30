@@ -8,23 +8,25 @@ import java.util.Scanner;
 public class SearchStudent {
 
     public void searchStudentById() {
-        Scanner scanner = new Scanner(System.in);  // Re-use scanner
+        Scanner scanner = new Scanner(System.in);
         int studentId = 0;
 
-        while (true) {  // Loop to continuously ask for student ID
+        while (true) {  // Loop to allow continuous search until user chooses to return to the dashboard
             // Ensure the input is a valid integer
             while (true) {
                 System.out.print("Enter Student ID to search: ");
                 try {
-                    studentId = scanner.nextInt();  // Get student ID here
-                    break; // Exit the loop if input is valid
+                    studentId = scanner.nextInt();
+                    scanner.nextLine(); // Clear buffer after reading integer input
+                    break;
                 } catch (InputMismatchException e) {
                     System.out.println("\nInvalid input! Please enter a valid integer for the Student ID.\n");
+                    Student.pressAnyKey();
                     scanner.nextLine(); // Clear the invalid input
                 }
             }
 
-            String fileName = "student_" + studentId + ".csv"; // Construct the filename for the student
+            String fileName = "student_" + studentId + ".csv";
             File file = new File(fileName);
 
             if (!file.exists()) {
@@ -32,12 +34,11 @@ public class SearchStudent {
             } else {
                 try (Scanner fileScanner = new Scanner(file)) {
                     if (fileScanner.hasNextLine()) {
-                        // Skip the header line
-                        fileScanner.nextLine(); // Read and ignore the header
+                        fileScanner.nextLine(); // Skip the header
 
                         if (fileScanner.hasNextLine()) {
-                            String studentData = fileScanner.nextLine(); // Read the student data
-                            String[] data = studentData.split(","); // Split the student data into fields
+                            String studentData = fileScanner.nextLine();
+                            String[] data = studentData.split(",");
                             System.out.printf("Student ID %d Found\n", studentId);
                             System.out.println("Student Data:");
                             System.out.println("ID: " + data[0]);
@@ -53,14 +54,22 @@ public class SearchStudent {
                 }
             }
 
-            pressAnyKey(); // Wait for user input after displaying student data or error
-        }
-    }
+            Student.pressAnyKey();
 
-    // Method to simulate "Press any key to continue"
-    private void pressAnyKey() {
-        System.out.println("Press Enter to continue...");
-        Scanner scanner = new Scanner(System.in); // Create a new Scanner for user input
-        scanner.nextLine();  // Wait for the user to press Enter
+            // Ask the user if they want to go back to the dashboard or continue searching
+            while (true) {
+                System.out.print("Do you want to go back to the dashboard? (y/n): ");
+                String response = scanner.nextLine().trim().toLowerCase();
+                if (response.equals("y")) {
+                    System.out.println("Returning to dashboard...\n");
+                    return; // Exit the method to go back to the dashboard
+                } else if (response.equals("n")) {
+                    System.out.println("Continuing to search for another student...\n");
+                    break; // Exit the inner loop to search another student
+                } else {
+                    System.out.println("\nInvalid input. Please enter 'y' or 'n'.\n");
+                }
+            }
+        }
     }
 }
