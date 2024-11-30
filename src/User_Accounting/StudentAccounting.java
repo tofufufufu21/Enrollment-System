@@ -1,6 +1,7 @@
 package User_Accounting;
 
 import java.io.*;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import Enrollment.Student;
 import Enrollment.InitializeStrands;
@@ -20,7 +21,7 @@ public class StudentAccounting {
         // Check payment status
         if (student.getBalance() == 0) {
             System.out.println("You are already fully paid.");
-            promptReturnToMenu();
+            Student.promptReturnToMenu(scanner);
             return;
         }
 
@@ -30,7 +31,7 @@ public class StudentAccounting {
             scanner.nextLine();
 
             if (choice == 'n' || choice == 'N') {
-                promptReturnToMenu();
+                Student.promptReturnToMenu(scanner);
                 continue;
             } else if (choice == 'y' || choice == 'Y') {
                 processPayment(student);
@@ -93,13 +94,25 @@ public class StudentAccounting {
     }
 
     private void processPayment(Student student) {
-        System.out.print("Please enter the amount of payment: ");
-        double paymentAmount = scanner.nextDouble();
-        scanner.nextLine();
+        double paymentAmount = 0;
 
-        if (paymentAmount <= 0) {
-            System.out.println("Invalid amount. Please enter a positive number.");
-            return;
+        while (true) {
+            try {
+                System.out.print("Please enter the amount of payment: ");
+                paymentAmount = scanner.nextDouble();
+                scanner.nextLine(); // Clear the buffer
+
+                if (paymentAmount <= 0) {
+                    System.out.println("Invalid amount. Please enter a positive number.");
+                    Student.pressAnyKey();
+                } else {
+                    break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input! Please enter a numeric value.");
+                Student.pressAnyKey();
+                scanner.nextLine(); // Clear invalid input
+            }
         }
 
         double currentBalance = student.getBalance();
@@ -107,6 +120,7 @@ public class StudentAccounting {
 
         if (newBalance < 0) {
             System.out.println("Payment exceeds the current balance. Please enter a valid amount.");
+            Student.pressAnyKey();
             return;
         }
 
@@ -122,7 +136,7 @@ public class StudentAccounting {
         generateReceipt(student, paymentAmount, newBalance);
 
         System.out.println("Payment processed successfully.");
-        promptReturnToMenu();
+        Student.promptReturnToMenu(scanner);
     }
 
     private void updatePaymentInfoInFile(Student student) {
@@ -171,12 +185,5 @@ public class StudentAccounting {
         System.out.printf("New Balance: %.2f\n", newBalance);
     }
 
-    private void promptReturnToMenu() {
-        System.out.print("Do you want to go back to the main menu? (y/n): ");
-        char backChoice = scanner.next().charAt(0);
-        scanner.nextLine();
-        if (backChoice == 'y' || backChoice == 'Y') {
-            UserType.user_type_menu();
-        }
-    }
+
 }

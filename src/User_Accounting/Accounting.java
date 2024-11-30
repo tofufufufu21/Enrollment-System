@@ -37,7 +37,7 @@ public class Accounting {
         // Check the payment status
         if (student.getBalance() == 0) {
             System.out.println("You are already fully paid.");
-            promptReturnToMenu();
+            Student.promptReturnToMenu(scanner);
             return;
         } else {
             // Print student information
@@ -135,12 +135,5 @@ public class Accounting {
         return subjects;
     }
 
-    private void promptReturnToMenu() {
-        System.out.print("Do you want to go back to the main menu? (y/n): ");
-        char backChoice = scanner.next().charAt(0);
-        scanner.nextLine();
-        if (backChoice == 'y' || backChoice == 'Y') {
-            UserType.user_type_menu();
-        }
-    }
+
 }

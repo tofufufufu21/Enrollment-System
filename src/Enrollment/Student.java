@@ -1,5 +1,7 @@
 package Enrollment;
 
+import User_Types.UserType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -134,6 +136,25 @@ public class Student {
         Scanner scanner = new Scanner(System.in); // Create a new Scanner for user input
         scanner.nextLine();  // Wait for the user to press Enter
     }
+    public static void promptReturnToMenu(Scanner scanner) {
+        while (true) {
+            System.out.print("\nDo you want to go back to the main menu? (y/n): ");
+            char backChoice = scanner.next().charAt(0);
+            scanner.nextLine(); // Clear buffer
+
+            if (backChoice == 'y' || backChoice == 'Y') {
+                UserType.user_type_menu();
+                return;
+            } else if (backChoice == 'n' || backChoice == 'N') {
+                System.out.println("\nContinuing...");
+                return;
+            } else {
+                System.out.println("\nInvalid input! Please enter 'y' or 'n'.");
+                pressAnyKey();
+            }
+        }
+    }
+
 }
 
 
