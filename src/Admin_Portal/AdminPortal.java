@@ -7,6 +7,7 @@ import Enrollment.EditStudent;
 import Enrollment.DeleteStudent;
 import Enrollment.InitializeStrands;
 import Enrollment.Student; // Import the Student class from the Enrollment package
+import User_Types.UserType;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -22,6 +23,8 @@ public class AdminPortal {
         SearchStudent searchStudent = new SearchStudent();
         EditStudent editStudent = new EditStudent();
         InitializeStrands initializeStrands = new InitializeStrands();
+        DeleteStudent deleteStudent = new DeleteStudent();
+
 
         List<Student.Strand> strands = initializeStrands.initializeAllStrands();
 
@@ -45,43 +48,42 @@ public class AdminPortal {
                 case '2':
                     System.out.println("Showing all students from CSV...");
                     showAllStudents.showAllFromCSV();
-                    pressAnyKey();
+                    Student.pressAnyKey();
                     break;
                 case '3':
                     System.out.println("Searching a student...");
-                    searchStudent.searchStudentById();  // No need to ask for ID here, it will be handled in the SearchStudent class
+                    searchStudent.searchStudentById(name, students, studentCount);  // No need to ask for ID here, it will be handled in the SearchStudent class
                     break;
                 case '4':
                     System.out.println("Editing student information...");
-                    editStudent.editStudentDetails();
-                    pressAnyKey();
+                    editStudent.editStudentDetails(name, students, studentCount);
+                    Student.pressAnyKey();
                     break;
                 case '5':
-                    DeleteStudent deleteStudent = new DeleteStudent();
-                    deleteStudent.deleteStudent();  // Calls the method for confirmation and deletion
+                    deleteStudent.deleteStudent(name, students, studentCount);  // Calls the method for confirmation and deletion
                     break;
                 case '0':
-                    System.out.println("Do you really want to log out? (y/n): ");
-                    char option = scanner.next().charAt(0);
-                    if (option == 'y' || option == 'Y') {
-                        return; // Log out
-                    } else if (option == 'n' || option == 'N') {
-                        continue; // Stay logged in
-                    } else {
-                        System.out.println("Invalid option.");
-                        pressAnyKey();
+                    char option;
+                    while (true) {  // Loop until a valid input is received
+                        System.out.println("Do you really want to log out? (y/n): ");
+                        option = scanner.next().charAt(0);
+
+                        if (option == 'y' || option == 'Y') {
+                            UserType.user_type_menu(); // Log out and go to user type menu
+                            return; // Exit the method after logging out
+                        } else if (option == 'n' || option == 'N') {
+                            adminPortal(name, students, studentCount); // Simply break out of the loop to return to the dashboard
+                            return;
+                        } else {
+                            System.out.println("\nInvalid option. Please enter 'y' or 'n'.\n");
+                        }
                     }
-                    break;
                 default:
-                    System.out.println("Invalid choice.");
-                    pressAnyKey();
+                    System.out.println("\nInvalid choice.");
+                    Student.pressAnyKey(); // Use pressAnyKey() method to pause and wait for user to continue
             }
         }
     }
 
-    private static void pressAnyKey() {
-        System.out.println("Press Enter to continue...");
-        scanner.nextLine();
-    }
 }
 

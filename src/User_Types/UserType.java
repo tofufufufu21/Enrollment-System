@@ -1,5 +1,6 @@
 package User_Types;
 
+import java.sql.SQLOutput;
 import java.util.List; // Import List
 import java.util.Scanner;
 
@@ -19,6 +20,7 @@ public class UserType {
         List<Student.Strand> strands = initializeStrands.initializeAllStrands();
 
         while (true) {
+            System.out.println("\n");
             System.out.println("MAIN MENU");
             System.out.println("1. Registrar");
             System.out.println("2. Accounting");

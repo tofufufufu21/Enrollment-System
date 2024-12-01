@@ -6,8 +6,8 @@ import java.util.Scanner;
 public class DeleteStudent {
     private static Scanner scanner = new Scanner(System.in);
 
-    public void deleteStudent() {
-        int idToDelete = getValidStudentId(); // Get valid student ID input
+    public void deleteStudent(String adminName, Student[] students, int[] studentCount) {
+        int idToDelete = getValidStudentId(adminName, students, studentCount); // Get valid student ID input
 
         // Construct the filename based on student ID
         String fileName = "student_" + idToDelete + ".csv"; // Ensure this file exists in the working directory
@@ -19,23 +19,42 @@ public class DeleteStudent {
         }
 
         // Ask for confirmation before deleting
-        char confirm = getValidConfirmation(); // Get valid confirmation input
-        if (confirm != 'y' && confirm != 'Y') {
-            System.out.println("Deletion canceled.");
-            return;
+        char confirm;
+        while (true) {
+            try {
+                System.out.print("\nDo you really want to delete this student? (y/n): ");
+                confirm = scanner.next().charAt(0);
+                scanner.nextLine();  // Consume newline
+
+                if (confirm == 'y' || confirm == 'Y') {
+                    break;  // Proceed with deletion if 'y' is entered
+                } else if (confirm == 'n' || confirm == 'N') {
+                    System.out.println("\nDeletion canceled.");
+                    idToDelete = getValidStudentId(adminName, students, studentCount);
+                } else {
+                    // If the input is not 'y', 'Y', 'n', or 'N', print invalid input and loop again
+                    System.out.println("\nInvalid input. Please enter 'y' or 'n'.");
+                    Student.pressAnyKey();
+                }
+            } catch (Exception e) {
+                // Catch any other unexpected input errors (e.g., input mismatch) and prompt for retry
+                System.out.println("\nInvalid input. Please enter 'y' or 'n'.");
+                Student.pressAnyKey();
+                scanner.nextLine(); // Clear the buffer to prevent infinite loop
+            }
         }
 
         // Delete the file
         if (file.delete()) {
-            System.out.println("Student with ID " + idToDelete + " has been deleted.");
+            System.out.println("\nStudent with ID " + idToDelete + " has been deleted.");
             shiftStudentIds(idToDelete); // Shift IDs of subsequent students
             updateLastId(); // Update last_id.txt after deletion
         } else {
-            System.out.println("Error deleting the student file.");
+            System.out.println("\nerror deleting the student file.");
         }
     }
 
-    private int getValidStudentId() {
+    private int getValidStudentId(String adminName, Student[] students, int[] studentCount) {
         int idToDelete = -1;
         while (true) {
             try {
@@ -45,31 +64,21 @@ public class DeleteStudent {
 
                 if (idToDelete < 0) {
                     System.out.println("Invalid input. Please enter a valid student ID.");
+                    Student.pressAnyKey();
+                    Student.PromptCancelToMenu(scanner, adminName, students, studentCount);
+                    scanner.nextLine();
                 } else {
                     break;
                 }
             } catch (Exception e) {
                 System.out.println("Invalid input. Please enter a valid student ID.");
                 scanner.nextLine(); // Consume invalid input
+                Student.pressAnyKey();
+                Student.PromptCancelToMenu(scanner, adminName, students, studentCount);
+
             }
         }
         return idToDelete;
-    }
-
-    private char getValidConfirmation() {
-        char confirm;
-        while (true) {
-            System.out.print("Do you really want to delete this student? (y/n): ");
-            confirm = scanner.next().charAt(0);
-            scanner.nextLine();  // Consume newline
-
-            if (confirm == 'y' || confirm == 'Y' || confirm == 'n' || confirm == 'N') {
-                break;  // Exit loop if valid input is entered
-            } else {
-                System.out.println("Invalid input. Please enter 'y' or 'n'.");
-            }
-        }
-        return confirm;
     }
 
     private void shiftStudentIds(int deletedId) {

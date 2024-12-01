@@ -1,6 +1,10 @@
 package Enrollment;
 
+//mga ibang class
 import User_Types.UserType;
+import Admin_Portal.AdminPortal;
+
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,6 +155,23 @@ public class Student {
             } else {
                 System.out.println("\nInvalid input! Please enter 'y' or 'n'.");
                 pressAnyKey();
+            }
+        }
+    }
+    public static void PromptCancelToMenu(Scanner scanner, String adminName, Student[] students, int[] studentCount) {
+        while (true) {
+            System.out.print("Do you want to cancel and go back to the Admin Portal? (y/n): ");
+            String response = scanner.nextLine().trim().toLowerCase();
+
+            if (response.equals("y")) {
+                System.out.println("Returning to Admin Portal...\n");
+                AdminPortal.adminPortal(adminName, students, studentCount); // Return to Admin Portal
+                return;
+            } else if (response.equals("n")) {
+                System.out.println("Continuing...\n");
+                break;
+            } else {
+                System.out.println("\nInvalid input. Please enter 'y' or 'n'.\n");
             }
         }
     }

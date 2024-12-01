@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class SearchStudent {
 
-    public void searchStudentById() {
+    public void searchStudentById(String adminName, Student[] students, int[] studentCount) {
         Scanner scanner = new Scanner(System.in);
         int studentId = 0;
 
@@ -21,8 +21,10 @@ public class SearchStudent {
                     break;
                 } catch (InputMismatchException e) {
                     System.out.println("\nInvalid input! Please enter a valid integer for the Student ID.\n");
-                    Student.pressAnyKey();
                     scanner.nextLine(); // Clear the invalid input
+                    Student.pressAnyKey();
+                    Student.PromptCancelToMenu(scanner, adminName, students, studentCount);
+
                 }
             }
 

@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class EditStudent {
     private static Scanner scanner = new Scanner(System.in);
 
-    public void editStudentDetails() {
+    public void editStudentDetails(String adminName, Student[] students, int[] studentCount) {
         int searchId = 0;
         boolean validInput = false;
         File file = null;
@@ -32,8 +32,9 @@ public class EditStudent {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("\nInvalid input. Please enter a valid integer for the student ID.");
+                scanner.nextLine();
                 Student.pressAnyKey();
-                scanner.nextLine(); // Consume the invalid input and let the loop continue
+                Student.PromptCancelToMenu(scanner, adminName, students, studentCount);// Consume the invalid input and let the loop continue
             }
         }
 
