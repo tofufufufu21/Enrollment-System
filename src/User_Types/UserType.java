@@ -4,6 +4,7 @@ import java.util.List; // Import List
 import java.util.Scanner;
 
 import Enrollment.Student;
+import Login.Login;
 import Registrar.*;
 import User_Accounting.Accounting; // Import the Accounting class
 import StudentDashboard.Dashboard; // Import the Dashboard class
@@ -58,13 +59,13 @@ public class UserType {
 
                 case '0':
                     while (true) {
-                        System.out.print("\n                                                                                        Do you really want to exit the program (y/n): ");
+                        System.out.print("\n                                                                                        Do you really want to go back to Login (y/n): ");
                         char option = scanner.next().charAt(0);
                         scanner.nextLine(); // Handle newline
 
                         if (option == 'y' || option == 'Y') {
-                            System.out.println("\n                                                                                        Thank you.....");
-                            System.exit(0);
+                            System.out.println("\n                                                                                        Going back to menu.....");
+                            Login.loginMenu();
                         } else if (option == 'n' || option == 'N') {
                             break;  // Exit the confirmation loop and return to the main menu
                         } else {

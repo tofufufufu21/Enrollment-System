@@ -5,6 +5,7 @@ import Enrollment.Student;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Scanner;
 
 public class DashboardDropSubject {
@@ -12,6 +13,13 @@ public class DashboardDropSubject {
     private static final int SUBJECT_COST = 1000; // Deduction for each dropped subject
 
     public void dropSubject(Student student) {
+
+        if (student.getPaymentStatus().equalsIgnoreCase("Fully Paid")) {
+            System.out.println("You are fully paid. You can't access this field. Please contact the manager or admin for more information.");
+            return; // Exit the method if the student is fully paid
+        }
+
+
         boolean dropMore = true; // Control variable for dropping multiple subjects
 
         while (dropMore) {
@@ -21,39 +29,68 @@ public class DashboardDropSubject {
                 return;
             }
 
-            for (Student.Subject subject : student.getEnrolledSubjects()) {
-                System.out.println("- " + subject.getSubjectName());
+            // Display enrolled subjects with numbers
+            List<Student.Subject> enrolledSubjects = student.getEnrolledSubjects();
+            for (int i = 0; i < enrolledSubjects.size(); i++) {
+                System.out.println((i + 1) + ". " + enrolledSubjects.get(i).getSubjectName());
             }
 
-            System.out.print("Enter the name of the subject to drop: ");
-            String dropSubject = scanner.nextLine().trim();
+            int subjectNumber = -1;
+            boolean validInput = false;
+            while (!validInput) {
+                System.out.print("Enter the number of the subject to drop (or press 'c' to cancel): ");
+                String input = scanner.nextLine().trim();
 
-            // Check if the student is currently enrolled in the selected subject
-            boolean isEnrolledForDrop = student.getEnrolledSubjects().stream()
-                    .anyMatch(subject -> subject.getSubjectName().trim().equalsIgnoreCase(dropSubject));
+                if (input.equalsIgnoreCase("c")) {
+                    System.out.println("\nCancelling subject drop and returning to the dashboard menu.");
+                    return; // Exit the method to return to the dashboard
+                }
+                try {
+                    subjectNumber = Integer.parseInt(input); // Use input directly here
 
-            if (isEnrolledForDrop) {
-                // Remove the subject from the student's enrolled subjects
-                student.getEnrolledSubjects().removeIf(subject -> subject.getSubjectName().trim().equalsIgnoreCase(dropSubject));
-
-                // Deduct the subject cost from the student's balance
-                student.setBalance(student.getBalance() - SUBJECT_COST);
-                System.out.println("Successfully dropped " + dropSubject);
-                System.out.println("Updated balance: " + student.getBalance());
-
-                // Save the updated student data to the file
-                saveStudentToFile(student, student.getSelectedStrand().getName());
-
-                // Ask if the user wants to drop more subjects
-                System.out.print("Do you want to drop another subject? (yes/no): ");
-                String response = scanner.nextLine().trim().toLowerCase();
-                dropMore = response.equals("yes");
-            } else {
-                System.out.println("You are not enrolled in " + dropSubject + ".");
-                dropMore = false; // Exit loop if subject is not found
+                    // Check if the number is valid
+                    if (subjectNumber < 1 || subjectNumber > enrolledSubjects.size()) {
+                        System.out.println("\nInvalid number. Please choose a valid subject number.");
+                    } else {
+                        validInput = true; // Exit loop when valid input is provided
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("\nInvalid input. Please enter a valid number.");
+                }
             }
+
+            // Get the subject to be dropped based on the number
+            Student.Subject subjectToDrop = enrolledSubjects.get(subjectNumber - 1);
+
+            // Remove the subject from the student's enrolled subjects
+            student.getEnrolledSubjects().remove(subjectToDrop);
+
+            // Deduct the subject cost from the student's balance
+            student.setBalance(student.getBalance() - SUBJECT_COST);
+            System.out.println("Successfully dropped " + subjectToDrop.getSubjectName());
+            System.out.println("Updated balance: " + student.getBalance());
+
+            // Save the updated student data to the file
+            saveStudentToFile(student, student.getSelectedStrand().getName());
+
+            // Ask if the user wants to drop more subjects
+            boolean validResponse = false;
+            String response = "";
+            while (!validResponse) {
+                System.out.print("\nDo you want to drop another subject? (yes/no): ");
+                response = scanner.nextLine().trim().toLowerCase();
+
+                if (response.equals("yes") || response.equals("no")) {
+                    validResponse = true;
+                } else {
+                    System.out.println("\nInvalid input. Please enter 'yes' or 'no'.");
+                }
+            }
+
+            dropMore = response.equals("yes");
         }
     }
+
 
     // Save student data to a CSV file
     private void saveStudentToFile(Student student, String selectedStrandFileName) {
