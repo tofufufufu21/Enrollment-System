@@ -136,13 +136,13 @@ public class Student {
         }
     }
     public static void pressAnyKey() {
-        System.out.println("Press Enter to continue...");
+        System.out.println("                                                                                        Press Enter to continue...");
         Scanner scanner = new Scanner(System.in); // Create a new Scanner for user input
         scanner.nextLine();  // Wait for the user to press Enter
     }
     public static void promptReturnToMenu(Scanner scanner) {
         while (true) {
-            System.out.print("\nDo you want to go back to the main menu? (y/n): ");
+            System.out.print("\n                                                                                        Do you want to go back to the main menu? (y/n): ");
             char backChoice = scanner.next().charAt(0);
             scanner.nextLine(); // Clear buffer
 
@@ -150,28 +150,28 @@ public class Student {
                 UserType.user_type_menu();
                 return;
             } else if (backChoice == 'n' || backChoice == 'N') {
-                System.out.println("\nContinuing...");
+                System.out.println("\n                                                                                        Continuing...");
                 return;
             } else {
-                System.out.println("\nInvalid input! Please enter 'y' or 'n'.");
+                System.out.println("\n                                                                                        Invalid input! Please enter 'y' or 'n'.");
                 pressAnyKey();
             }
         }
     }
     public static void PromptCancelToMenu(Scanner scanner, String adminName, Student[] students, int[] studentCount) {
         while (true) {
-            System.out.print("Do you want to cancel and go back to the Admin Portal? (y/n): ");
+            System.out.print("                                                                                        Do you want to cancel and go back to the Admin Portal? (y/n): ");
             String response = scanner.nextLine().trim().toLowerCase();
 
             if (response.equals("y")) {
-                System.out.println("Returning to Admin Portal...\n");
+                System.out.println("                                                                                        Returning to Admin Portal...\n");
                 AdminPortal.adminPortal(adminName, students, studentCount); // Return to Admin Portal
                 return;
             } else if (response.equals("n")) {
-                System.out.println("Continuing...\n");
+                System.out.println("                                                                                        Continuing...\n");
                 break;
             } else {
-                System.out.println("\nInvalid input. Please enter 'y' or 'n'.\n");
+                System.out.println("\n                                                                                        Invalid input. Please enter 'y' or 'n'.\n");
             }
         }
     }

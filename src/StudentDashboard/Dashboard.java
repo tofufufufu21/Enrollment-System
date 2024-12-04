@@ -18,20 +18,29 @@ public class Dashboard {
     }
 
     public void login() {
-        System.out.print("Enter Student ID: ");
-        int studentId = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        while (true) {
+            System.out.print("                                                                                           =====================================");
+            System.out.print("\n                                                                                                Enter Student ID: ");
 
-        // Fetch student by ID
-        Student student = getStudentById(studentId);
-        if (student != null) {
-            System.out.println("Login successful.");
+            // Validate input type
+            try {
+                int studentId = Integer.parseInt(scanner.nextLine().trim());
 
-            // Pass the student object to the dashboard menu
-            DashboardMenu menu = new DashboardMenu();
-            menu.showMenu(student); // Call showMenu and pass student object
-        } else {
-            System.out.println("Student not found. Please try again.");
+                // Fetch student by ID
+                Student student = getStudentById(studentId);
+                if (student != null) {
+                    System.out.println("\n                                                                                                Login successful.");
+
+                    // Pass the student object to the dashboard menu
+                    DashboardMenu menu = new DashboardMenu();
+                    menu.showMenu(student);
+                    break; // Exit the loop after successful login
+                } else {
+                    System.out.println("\n                                                                                           Student not found. Please try again.\n");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("\n                                                                                   Invalid input. Please enter a valid numeric Student ID.\n");
+            }
         }
     }
 
@@ -55,7 +64,7 @@ public class Dashboard {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading student data: " + e.getMessage());
+            System.out.println("\n                                                                    Error reading student data: " + e.getMessage());
         }
 
         return null; // Return null if no matching student was found

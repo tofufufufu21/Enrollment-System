@@ -36,7 +36,7 @@ public class DashboardAddSubject {
                 .collect(Collectors.toList());
 
         if (notEnrolledSubjects.isEmpty()) {
-            System.out.println("You are already enrolled in all available subjects for your strand.");
+            System.out.println("                                                                               You are already enrolled in all available subjects for your strand.");
             return;
         }
 
@@ -46,20 +46,20 @@ public class DashboardAddSubject {
         while (addMore) {
             // Check if there are no more subjects to enroll in
             if (notEnrolledSubjects.isEmpty()) {
-                System.out.println("All subjects have been enrolled. Exiting.");
+                System.out.println("                                                                                        All subjects have been enrolled. Exiting.");
                 break;
             }
 
             displayNotEnrolledSubjects(notEnrolledSubjects);
 
-            System.out.print("Enter the name of the subject to add: ");
+            System.out.print("                                                                                        Enter the name of the subject to add: ");
             String addSubject = scanner.nextLine().trim();
             String cleanAddSubject = cleanSubjectName(addSubject);
 
             // Check if the subject is already enrolled
             if (enrolledSubjectNames.contains(cleanAddSubject)) {
                 System.out.println(cleanAddSubject + " is already enrolled.");
-                System.out.print("Do you want to add another subject? (yes/no): ");
+                System.out.print("                                                                                        Do you want to add another subject? (yes/no): ");
                 String response = scanner.nextLine().trim().toLowerCase();
                 addMore = response.equals("yes");
                 continue; // Skip the current iteration if subject is already enrolled
@@ -81,12 +81,12 @@ public class DashboardAddSubject {
                         .filter(subject -> !enrolledSubjectNames.contains(cleanSubjectName(subject.getSubjectName())))
                         .collect(Collectors.toList());
 
-                System.out.print("Do you want to add another subject? (yes/no): ");
+                System.out.print("                                                                                        Do you want to add another subject? (yes/no): ");
                 String response = scanner.nextLine().trim().toLowerCase();
                 addMore = response.equals("yes");
             } else {
-                System.out.println(cleanAddSubject + " is not available for enrollment.");
-                System.out.print("Do you want to add another subject? (yes/no): ");
+                System.out.println(cleanAddSubject + "is not available for enrollment.");
+                System.out.print("                                                                                        Do you want to add another subject? (yes/no): ");
                 String response = scanner.nextLine().trim().toLowerCase();
                 addMore = response.equals("yes");
             }

@@ -14,19 +14,19 @@ public class StudentAccounting {
     public void loadStudentDashboard(int studentId) {
         Student student = getStudentDetails(studentId);
         if (student == null) {
-            System.out.println("Student not found.");
+            System.out.println("                                                                                        Student not found.");
             return;
         }
 
         // Check payment status
         if (student.getBalance() == 0) {
-            System.out.println("You are already fully paid.");
+            System.out.println("                                                                                        You are already fully paid.");
             Student.promptReturnToMenu(scanner);
             return;
         }
 
         while (true) {
-            System.out.print("\nDo you want to make a payment? (y/n): ");
+            System.out.print("\n                                                                                        Do you want to make a payment? (y/n): ");
             char choice = scanner.next().charAt(0);
             scanner.nextLine();
 
@@ -37,7 +37,7 @@ public class StudentAccounting {
                 processPayment(student);
                 break;
             } else {
-                System.out.println("Invalid choice. Please enter 'y' or 'n'.");
+                System.out.println("                                                                                        Invalid choice. Please enter 'y' or 'n'.");
             }
         }
     }
@@ -47,7 +47,7 @@ public class StudentAccounting {
         File file = new File(fileName);
 
         if (!file.exists()) {
-            System.out.println("Student file not found.");
+            System.out.println("                                                                                        Student file not found.");
             return null;
         }
 
@@ -98,18 +98,18 @@ public class StudentAccounting {
 
         while (true) {
             try {
-                System.out.print("Please enter the amount of payment: ");
+                System.out.print("                                                                                        Please enter the amount of payment: ");
                 paymentAmount = scanner.nextDouble();
                 scanner.nextLine(); // Clear the buffer
 
                 if (paymentAmount <= 0) {
-                    System.out.println("Invalid amount. Please enter a positive number.");
+                    System.out.println("                                                                                        Invalid amount. Please enter a positive number.");
                     Student.pressAnyKey();
                 } else {
                     break;
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input! Please enter a numeric value.");
+                System.out.println("                                                                                        Invalid input! Please enter a numeric value.");
                 Student.pressAnyKey();
                 scanner.nextLine(); // Clear invalid input
             }
@@ -119,7 +119,7 @@ public class StudentAccounting {
         double newBalance = currentBalance - paymentAmount;
 
         if (newBalance < 0) {
-            System.out.println("Payment exceeds the current balance. Please enter a valid amount.");
+            System.out.println("                                                                                        Payment exceeds the current balance. Please enter a valid amount.");
             Student.pressAnyKey();
             return;
         }
@@ -127,7 +127,7 @@ public class StudentAccounting {
         // Update student data
         student.setBalance(newBalance);
         if (newBalance == 0) {
-            student.setPaymentStatus("Fully Paid");
+            student.setPaymentStatus("                                                                                        Fully Paid");
         }
 
         // Save only payment status and balance, keeping other information unchanged
@@ -135,7 +135,7 @@ public class StudentAccounting {
 
         generateReceipt(student, paymentAmount, newBalance);
 
-        System.out.println("Payment processed successfully.");
+        System.out.println("                                                                                        Payment processed successfully.");
         Student.promptReturnToMenu(scanner);
     }
 
@@ -178,11 +178,11 @@ public class StudentAccounting {
     }
 
     private void generateReceipt(Student student, double paymentAmount, double newBalance) {
-        System.out.println("\n--- Payment Receipt ---");
-        System.out.printf("Student ID: %d\n", student.getId());
-        System.out.printf("Name: %s\n", student.getName());
-        System.out.printf("Amount Paid: %.2f\n", paymentAmount);
-        System.out.printf("New Balance: %.2f\n", newBalance);
+        System.out.println("\n                                                                                        --- Payment Receipt ---");
+        System.out.printf("                                                                                        Student ID: %d\n", student.getId());
+        System.out.printf("                                                                                        Name: %s\n", student.getName());
+        System.out.printf("                                                                                        Amount Paid: %.2f\n", paymentAmount);
+        System.out.printf("                                                                                        New Balance: %.2f\n", newBalance);
     }
 
 

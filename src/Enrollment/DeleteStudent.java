@@ -14,7 +14,9 @@ public class DeleteStudent {
         File file = new File(fileName);
 
         if (!file.exists()) {
-            System.out.println("Error: Student file '" + fileName + "' not found!");
+            System.out.println("\n                                                                                        =======================================");
+            System.out.println("                                                                                           Error: Student file '" + fileName + "' not found!");
+            System.out.println("                                                                                        =======================================");
             return;
         }
 
@@ -22,23 +24,26 @@ public class DeleteStudent {
         char confirm;
         while (true) {
             try {
-                System.out.print("\nDo you really want to delete this student? (y/n): ");
+                System.out.println("\n                                                                                        =======================================");
+                System.out.println("                                                                                               Confirm Student Deletion       ");
+                System.out.println("                                                                                        =======================================");
+                System.out.print("                                                                                        Do you really want to delete this student? (y/n): ");
                 confirm = scanner.next().charAt(0);
                 scanner.nextLine();  // Consume newline
 
                 if (confirm == 'y' || confirm == 'Y') {
                     break;  // Proceed with deletion if 'y' is entered
                 } else if (confirm == 'n' || confirm == 'N') {
-                    System.out.println("\nDeletion canceled.");
+                    System.out.println("\n                                                                                        Deletion canceled.");
                     idToDelete = getValidStudentId(adminName, students, studentCount);
                 } else {
                     // If the input is not 'y', 'Y', 'n', or 'N', print invalid input and loop again
-                    System.out.println("\nInvalid input. Please enter 'y' or 'n'.");
+                    System.out.println("\n                                                                                        Invalid input. Please enter 'y' or 'n'.");
                     Student.pressAnyKey();
                 }
             } catch (Exception e) {
                 // Catch any other unexpected input errors (e.g., input mismatch) and prompt for retry
-                System.out.println("\nInvalid input. Please enter 'y' or 'n'.");
+                System.out.println("\n                                                                                        Invalid input. Please enter 'y' or 'n'.");
                 Student.pressAnyKey();
                 scanner.nextLine(); // Clear the buffer to prevent infinite loop
             }
@@ -46,11 +51,15 @@ public class DeleteStudent {
 
         // Delete the file
         if (file.delete()) {
-            System.out.println("\nStudent with ID " + idToDelete + " has been deleted.");
+            System.out.println("\n                                                                                        =======================================");
+            System.out.println("                                                                                          Student with ID " + idToDelete + " has been deleted.");
+            System.out.println("                                                                                        =======================================");
             shiftStudentIds(idToDelete); // Shift IDs of subsequent students
             updateLastId(); // Update last_id.txt after deletion
         } else {
-            System.out.println("\nerror deleting the student file.");
+            System.out.println("\n                                                                                        =======================================");
+            System.out.println("                                                                                             Error deleting the student file.");
+            System.out.println("                                                                                        =======================================");
         }
     }
 
@@ -58,12 +67,15 @@ public class DeleteStudent {
         int idToDelete = -1;
         while (true) {
             try {
-                System.out.print("Enter Student ID to delete: ");
+                System.out.print("\n                                                                                        =======================================");
+                System.out.print("\n                                                                                        Enter Student ID to delete: ");
                 idToDelete = scanner.nextInt();
                 scanner.nextLine(); // Consume newline
 
                 if (idToDelete < 0) {
-                    System.out.println("Invalid input. Please enter a valid student ID.");
+                    System.out.println("\n                                                                                        =======================================");
+                    System.out.println("                                                                                      Invalid input. Please enter a valid student ID.");
+                    System.out.println("                                                                                        =======================================");
                     Student.pressAnyKey();
                     Student.PromptCancelToMenu(scanner, adminName, students, studentCount);
                     scanner.nextLine();
@@ -71,11 +83,12 @@ public class DeleteStudent {
                     break;
                 }
             } catch (Exception e) {
-                System.out.println("Invalid input. Please enter a valid student ID.");
+                System.out.println("\n                                                                                        =======================================");
+                System.out.println("                                                                                          Invalid input. Please enter a valid student ID.");
+                System.out.println("                                                                                        =======================================");
                 scanner.nextLine(); // Consume invalid input
                 Student.pressAnyKey();
                 Student.PromptCancelToMenu(scanner, adminName, students, studentCount);
-
             }
         }
         return idToDelete;
@@ -100,12 +113,16 @@ public class DeleteStudent {
             File newFile = new File(newFileName);
 
             if (currentFile.renameTo(newFile)) {
-                System.out.println("Renamed student file from ID " + (currentId + 1) + " to " + currentId);
+                System.out.println("\n                                                                                        =======================================");
+                System.out.println("                                                                                         Renamed student file from ID " + (currentId + 1) + " to " + currentId);
+                System.out.println("                                                                                        =======================================");
 
                 // Now, update the student ID inside the renamed file
                 updateStudentIdInFile(newFile, currentId);
             } else {
-                System.out.println("Error renaming file '" + currentFileName + "' to '" + newFileName + "'.");
+                System.out.println("\n                                                                                        =======================================");
+                System.out.println("                                                                                         Error renaming file '" + currentFileName + "' to '" + newFileName + "'.");
+                System.out.println("                                                                                        =======================================");
                 break;
             }
 
@@ -135,14 +152,20 @@ public class DeleteStudent {
             }
 
         } catch (IOException e) {
-            System.out.println("Error updating student ID: " + e.getMessage());
+            System.out.println("\n                                                                                        =======================================");
+            System.out.println("                                                                                           Error updating student ID: " + e.getMessage());
+            System.out.println("                                                                                         =======================================");
         }
 
         // Replace the original file with the updated file
         if (studentFile.delete() && tempFile.renameTo(studentFile)) {
-            System.out.println("Student ID inside the file updated to " + newId);
+            System.out.println("\n                                                                                        =======================================");
+            System.out.println("                                                                                           Student ID inside the file updated to " + newId);
+            System.out.println("                                                                                        =======================================");
         } else {
-            System.out.println("Error updating the student file.");
+            System.out.println("\n                                                                                        =======================================");
+            System.out.println("                                                                                           Error updating the student file.");
+            System.out.println("                                                                                        =======================================");
         }
     }
 
@@ -159,7 +182,9 @@ public class DeleteStudent {
                     lastId = Integer.parseInt(line.trim());
                 }
             } catch (IOException e) {
-                System.out.println("Error reading last_id.txt: " + e.getMessage());
+                System.out.println("\n                                                                                        =======================================");
+                System.out.println("                                                                                           Error reading last_id.txt: " + e.getMessage());
+                System.out.println("                                                                                        =======================================");
             }
         }
 
@@ -172,9 +197,9 @@ public class DeleteStudent {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(lastIdFile))) {
             bw.write(String.valueOf(lastId));
         } catch (IOException e) {
-            System.out.println("Error updating last_id.txt: " + e.getMessage());
+            System.out.println("\n                                                                                        =======================================");
+            System.out.println("                                                                                           Error updating last_id.txt: " + e.getMessage());
+            System.out.println("                                                                                        =======================================");
         }
     }
-
-
 }
