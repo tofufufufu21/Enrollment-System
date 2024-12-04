@@ -11,6 +11,7 @@ public class ShowAllStudents {
         File[] files = directory.listFiles((dir, name) -> name.startsWith("student_") && name.endsWith(".csv"));
 
         if (files != null && files.length > 0) {
+            System.out.println("\n\n\n\n\n"); // Push the menu down (adjust for centering)
             System.out.println("Enrolled Students:");
             System.out.printf("%-5s %-20s %-15s %-10s %-15s %-10s%n", "ID", "Name", "Phone Number", "Strand", "Payment Status", "Balance");
 

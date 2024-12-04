@@ -9,7 +9,6 @@ import Enrollment.InitializeStrands;
 import Enrollment.Student; // Import the Student class from the Enrollment package
 import User_Types.UserType;
 
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,65 +24,82 @@ public class AdminPortal {
         InitializeStrands initializeStrands = new InitializeStrands();
         DeleteStudent deleteStudent = new DeleteStudent();
 
-
         List<Student.Strand> strands = initializeStrands.initializeAllStrands();
 
         while (true) {
-            System.out.println("\nWelcome, " + name + "!\n");
-            System.out.println("REGISTRAR DASHBOARD");
-            System.out.println("1. Enroll a New Student");
-            System.out.println("2. Show all Students");
-            System.out.println("3. Search a Student");
-            System.out.println("4. Edit Student Information");
-            System.out.println("5. Delete a Student");
-            System.out.println("\n0. Log Out\n");
-            System.out.print("Select your Choice: ");
+            System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
+            System.out.println("                                                                                        ===========================================");
+            System.out.println("                                                                                        ||            REGISTRAR DASHBOARD        ||");
+            System.out.println("                                                                                        ===========================================");
+            System.out.println("                                                                                        ||           Welcome, " + name + "!             ||");
+            System.out.println("                                                                                        ||                                       ||");
+            System.out.println("                                                                                        ||      1. Enroll a New Student          ||");
+            System.out.println("                                                                                        ||      2. Show All Students             ||");
+            System.out.println("                                                                                        ||      3. Search a Student              ||");
+            System.out.println("                                                                                        ||      4. Edit Student Information      ||");
+            System.out.println("                                                                                        ||      5. Delete a Student              ||");
+            System.out.println("                                                                                        ||      0. Log Out                       ||");
+            System.out.println("                                                                                        ===========================================");
+            System.out.print("                                                                                               Select your Choice: ");
             choice = scanner.next().charAt(0);
             scanner.nextLine();
 
             switch (choice) {
-                case '1':
+                case '1': // Enroll a new student
                     enrollStudent.enrollStudent(strands, students, studentCount);
                     break;
-                case '2':
-                    System.out.println("Showing all students from CSV...");
+
+                case '2': // Show all students
+                    System.out.println("\nShowing all students from CSV...");
                     showAllStudents.showAllFromCSV();
                     Student.pressAnyKey();
                     break;
-                case '3':
-                    System.out.println("Searching a student...");
-                    searchStudent.searchStudentById(name, students, studentCount);  // No need to ask for ID here, it will be handled in the SearchStudent class
+
+                case '3': // Search for a student
+                    System.out.println("\nSearching for a student...");
+                    searchStudent.searchStudentById(name, students, studentCount);
                     break;
-                case '4':
-                    System.out.println("Editing student information...");
+
+                case '4': // Edit student information
+                    System.out.println("\nEditing student information...");
                     editStudent.editStudentDetails(name, students, studentCount);
                     Student.pressAnyKey();
                     break;
-                case '5':
-                    deleteStudent.deleteStudent(name, students, studentCount);  // Calls the method for confirmation and deletion
-                    break;
-                case '0':
-                    char option;
-                    while (true) {  // Loop until a valid input is received
-                        System.out.println("Do you really want to log out? (y/n): ");
-                        option = scanner.next().charAt(0);
 
-                        if (option == 'y' || option == 'Y') {
-                            UserType.user_type_menu(); // Log out and go to user type menu
-                            return; // Exit the method after logging out
-                        } else if (option == 'n' || option == 'N') {
-                            adminPortal(name, students, studentCount); // Simply break out of the loop to return to the dashboard
-                            return;
-                        } else {
-                            System.out.println("\nInvalid option. Please enter 'y' or 'n'.\n");
-                        }
+                case '5': // Delete a student
+                    System.out.println("\nDeleting a student...");
+                    deleteStudent.deleteStudent(name, students, studentCount);
+                    break;
+
+                case '0': // Log out
+                    if (confirmLogout()) {
+                        UserType.user_type_menu(); // Redirect to user type menu
+                        return;
                     }
-                default:
-                    System.out.println("\nInvalid choice.");
-                    Student.pressAnyKey(); // Use pressAnyKey() method to pause and wait for user to continue
+                    break;
+
+                default: // Invalid choice
+                    System.out.println("\nInvalid choice. Please try again.");
+                    Student.pressAnyKey();
+                    break;
             }
         }
     }
 
-}
+    // Helper method to confirm logout
+    private static boolean confirmLogout() {
+        char option;
+        while (true) {
+            System.out.print("\n                                                                                        Do you really want to log out? (y/n): ");
+            option = scanner.next().charAt(0);
 
+            if (option == 'y' || option == 'Y') {
+                return true;
+            } else if (option == 'n' || option == 'N') {
+                return false;
+            } else {
+                System.out.println("\n                                                                                        Invalid input. Please enter 'y' or 'n'.");
+            }
+        }
+    }
+}

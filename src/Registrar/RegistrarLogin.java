@@ -19,10 +19,14 @@ public class RegistrarLogin {
         generateDefaultAdminCredentials();
 
         do {
-            System.out.println("\nREGISTRAR MENU");
-            System.out.println("1. Login");
-            System.out.println("0. Go Back to Main Menu");
-            System.out.print("Select your Choice: ");
+            System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n");
+            System.out.println("                                                                                        =====================================");
+            System.out.println("                                                                                        ||          REGISTRAR MENU         ||");
+            System.out.println("                                                                                        =====================================");
+            System.out.println("                                                                                        ||  1. Login                       ||");
+            System.out.println("                                                                                        ||  0. Go Back to Main Menu        ||");
+            System.out.println("                                                                                        =====================================");
+            System.out.print("                                                                                                Select your Choice: ");
             choice = scanner.next().charAt(0);
             scanner.nextLine();
 
@@ -33,8 +37,8 @@ public class RegistrarLogin {
                     registrarLogin();
                     break;
                 default:
-                    System.out.println("\nInvalid input. Try again...\n");
-                    System.out.println("Press Enter to continue...");
+                    System.out.println("\n                                                                                        Invalid input. Try again...");
+                    System.out.println("                                                                                        Press Enter to continue...");
                     scanner.nextLine();
             }
         } while (true);
@@ -51,32 +55,37 @@ public class RegistrarLogin {
         int[] studentCount = new int[1];
 
         while (attempts < MAX_ATTEMPTS) {
-            System.out.println("\nRegistrar Login");
-            System.out.print("Enter Username: ");
+            System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n");
+            System.out.println("                                                                                        =====================================");
+            System.out.println("                                                                                        ||        REGISTRAR LOGIN          ||");
+            System.out.println("                                                                                        =====================================");
+            System.out.print("                                                                                                Enter Username: ");
             username = scanner.nextLine();
 
-            System.out.print("Enter Password: ");
+            System.out.print("                                                                                                Enter Password: ");
             password = scanner.nextLine();
 
             if (userValidateRegistrarLogin(username, password)) {
-                System.out.println("\nLogin Successful!\n");
-                System.out.println("Press Enter to continue...");
+                System.out.println("\n                                                                                        Login Successful!\n");
+                System.out.println("                                                                                        Press Enter to continue...");
                 scanner.nextLine();
                 AdminPortal.adminPortal(username, students, studentCount);
                 return;
             } else {
                 attempts++;
-                System.out.println("\nInvalid Username or Password. Attempt " + attempts + "/" + MAX_ATTEMPTS);
-                System.out.println("Press Enter to continue...");
+                System.out.println("\n                                                                                        Invalid Username or Password. Attempt " + attempts + "/" + MAX_ATTEMPTS);
+                System.out.println("                                                                                        Press Enter to continue...");
                 scanner.nextLine();
             }
         }
 
         // Options after 5 failed attempts
-        System.out.println("\nYou have reached the maximum number of login attempts.");
-        System.out.println("[1] Forgot password?");
-        System.out.println("[0] Go back to menu");
-        System.out.print("Select your Choice: ");
+        System.out.println("\n                                                                                        You have reached the maximum number of login attempts.");
+        System.out.println("                                                                                        =====================================");
+        System.out.println("                                                                                        ||  [1] Forgot Password?           ||");
+        System.out.println("                                                                                        ||  [0] Go Back to Menu            ||");
+        System.out.println("                                                                                        =====================================");
+        System.out.print("                                                                                                Select your Choice: ");
         char choice = scanner.next().charAt(0);
         scanner.nextLine();
 
@@ -98,7 +107,7 @@ public class RegistrarLogin {
                 return username.equals(correctUsername) && password.equals(correctPassword);
             }
         } catch (IOException e) {
-            System.out.println("Error: Could not open registrar credentials file.");
+            System.out.println("                                                                                         Error: Could not open registrar credentials file.");
         }
         return false;
     }
@@ -110,28 +119,26 @@ public class RegistrarLogin {
             try (FileWriter writer = new FileWriter(CREDENTIALS_FILE)) {
                 writer.write("admin admin");
             } catch (IOException e) {
-                System.out.println("Error: Could not create registrar credentials file.");
+                System.out.println("                                                                                      Error: Could not create registrar credentials file.");
             }
         }
     }
 
     // Reset credentials when user selects "Forgot password"
-    // Reset credentials when user selects "Forgot password"
     private static void resetCredentials() {
-        System.out.print("Enter new username: ");
+        System.out.print("\n                                                                                              Enter new username: ");
         String newUsername = scanner.nextLine().trim();
 
-        System.out.print("Enter new password: ");
+        System.out.print("                                                                                                Enter new password: ");
         String newPassword = scanner.nextLine();
 
         if (!newUsername.isEmpty() && !newPassword.isEmpty()) {
             updateCredentials(newUsername, newPassword);
-            System.out.println("\nCredentials updated successfully!\n");
+            System.out.println("\n                                                                                        Credentials updated successfully!\n");
         } else {
-            System.out.println("\nError: Username and password cannot be empty. Please try again.");
+            System.out.println("\n                                                                                        Error: Username and password cannot be empty. Please try again.");
         }
     }
-
 
     // Update credentials in the file
     private static void updateCredentials(String username, String password) {
@@ -141,7 +148,7 @@ public class RegistrarLogin {
             writer.write(username + " " + password);
             writer.flush();  // Ensures data is written to the file
         } catch (IOException e) {
-            System.out.println("Error: Could not update registrar credentials file.");
+            System.out.println("                                                                                          Error: Could not update registrar credentials file.");
             e.printStackTrace();
         }
     }
