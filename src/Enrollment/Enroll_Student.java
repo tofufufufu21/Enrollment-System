@@ -1,5 +1,6 @@
 package Enrollment;
 
+
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,7 +13,7 @@ import java.util.List;
 public class Enroll_Student {
 
     private static final int SUBJECT_COST = 1000; // Cost per subject
-    private static final int LAB_FEE = 5000;
+    private static final int LAB_FEE = 5000; // Example fee values
     private static final int PE_FEE = 5000;
     private static final int IMMERSION_FEE = 5000;
     private static final int LIBRARY_FEE = 5000;
@@ -62,6 +63,7 @@ public class Enroll_Student {
             }
         }
 
+        // Set a default balance (adjust as needed)
         double balance = 0;
 
         System.out.println("                                                                                          ====================================");
@@ -81,22 +83,28 @@ public class Enroll_Student {
         char choice;
         while (true) {
             System.out.print("                                                                                               Enter Choice (0-8): ");
-            String input = scanner.nextLine().trim();
+            String input = scanner.nextLine().trim(); // Read the entire input and trim whitespace
+
             if (input.equals("0")) {
                 System.out.println("                                                                                        \n----------------------------------------");
                 System.out.println("                                                                                          Enrollment canceled. Returning to menu. ");
                 System.out.println("                                                                                        ----------------------------------------\n");
-                return;
+                return; // Exit the method or loop
             }
+
             if (input.length() == 1 && Character.isDigit(input.charAt(0))) {
-                choice = input.charAt(0);
-                break;
+                choice = input.charAt(0); // Get the first character if it's a valid digit
+                break; // Exit the loop if valid
             }
+
+            // Print invalid message without re-prompting
             System.out.println("\n                                                                                        ----------------------------------------");
             System.out.println("                                                                                         Invalid choice! Please enter a valid number.");
             System.out.println("                                                                                         ----------------------------------------\n");
         }
 
+
+        // Select the strand based on the choice
         String fileName = switch (choice) {
             case '1' -> "ABM_11.csv";
             case '2' -> "STEM_11.csv";
@@ -106,49 +114,70 @@ public class Enroll_Student {
             case '6' -> "STEM_12.csv";
             case '7' -> "HUMSS_12.csv";
             case '8' -> "GAS_12.csv";
-            default -> null;
+            case '0' -> {
+                System.out.println("Enrollment canceled. Returning to Admin Portal...");
+                yield null; // Yielding null for cancellation
+            }
+            default -> {
+                System.out.println("Invalid choice.");
+                yield null; // Yielding null for invalid choice
+            }
         };
 
         if (fileName != null) {
+            // Proceed with enrollment
             System.out.println("\n\n                                                                                        -----ENROLL TO AT LEAST ONE SUBJECT-----");
             System.out.println("                                                                                              1000 Pesos per subject\n");
 
+            // Attempt to read the correct file for subjects
             List<Student.Subject> subjects = loadSubjectsFromCSV(fileName);
+
+            // Check if subjects were loaded
             if (subjects.isEmpty()) {
                 System.out.println("                                                                                        No subjects found for the selected strand. Enrollment cancelled.");
                 return;
             }
 
-            Student.Strand selectedStrand = strands.get(choice - '1');
+            // Set the selected strand in the newStudent
+            Student.Strand selectedStrand = strands.get(choice - '1'); // Adjusting to index (0-based)
+
+            // Create the Student object with the collected data
             Student newStudent = new Student(lastId + 1, name, balance, phoneNumber, selectedStrand, "Unpaid");
 
+
+
+            // Display available subjects for the selected strand and ask for enrollment
             for (Student.Subject subject : subjects) {
                 boolean validInput = false;
                 while (!validInput) {
                     System.out.printf("                                                                                Do you want to enroll in \"%s\"? (y/n): ", subject.getSubjectName());
-                    char enroll = scanner.next().charAt(0);
-                    scanner.nextLine();
+                    char enroll = scanner.next().charAt(0); // Read the character input
+                    scanner.nextLine();  // Consume the newline after the char input
+
                     if (enroll == 'y' || enroll == 'Y') {
-                        newStudent.addSubject(subject);
+                        newStudent.addSubject(subject); // Add subject to student
                         validInput = true;
                     } else if (enroll == 'n' || enroll == 'N') {
-                        validInput = true;
+                        validInput = true; // No action needed, just mark input as valid
                     } else {
                         System.out.println("                                                                                   Invalid input. Please enter 'y' for yes or 'n' for no.");
                     }
                 }
             }
 
+
             if (newStudent.getNumEnrolledSubjects() == 0) {
-                System.out.println("                                                                                        You didn't enroll in at least one subject. Enrollment cancelled.");
+                System.out.println("You didn't enroll in at least one subject. Enrollment cancelled.");
                 return;
             }
 
+            // Calculate the total cost including all applicable fees
             double totalCost = newStudent.getNumEnrolledSubjects() * SUBJECT_COST + LAB_FEE + PE_FEE + IMMERSION_FEE + LIBRARY_FEE + WATER_ENERGY_FEE;
 
             do {
-                System.out.printf(" \nTotal Subject cost (including additional fees): %.2f\n", totalCost);
-                System.out.println("\nLAB_FEE = ₱5000\nPE_FEE = ₱5000\nIMMERSION_FEE = ₱5000\nLIBRARY_FEE = ₱5000\nWATER_ENERGY_FEE = ₱5000\n");
+                System.out.printf("\nTotal Subject cost (including additional fees): %.2f\n", totalCost);
+                System.out.println("\nLAB_FEE = ₱5000\nPE_FEE = ₱5000\nIMMERSION_FEE = ₱5000\nLIBRARY_FEE = ₱5000\nWATER_ENERGY_FEE = ₱5000\n"); // inayos ko yung peso sign
+                // Display enrolled subjects
                 System.out.println("Subjects you have enrolled in:");
                 for (Student.Subject subject : newStudent.getEnrolledSubjects()) {
                     System.out.println(" - " + subject.getSubjectName());
@@ -169,19 +198,24 @@ public class Enroll_Student {
                 }
             } while (true);
 
-            newStudent.setBalance(totalCost);
+            newStudent.setBalance(totalCost); // Updated balance calculation
+
             students[studentCount[0]] = newStudent;
             studentCount[0]++;
+
             saveStudentToFile(newStudent, fileName);
-            saveNewId(lastId + 1);
+            saveNewId(lastId + 1); // Save the updated last used ID here
+
         }
     }
 
     private int loadLastUsedId() {
         File file = new File("last_id.txt");
+
         if (!file.exists()) {
-            return 0;
+            return 0; // Start from ID 0 if file does not exist
         }
+
         try (Scanner scanner = new Scanner(file)) {
             if (scanner.hasNextInt()) {
                 return scanner.nextInt();
@@ -189,11 +223,12 @@ public class Enroll_Student {
         } catch (FileNotFoundException e) {
             System.out.println("                                                                                        Error opening file: " + e.getMessage());
         }
-        return 0;
+
+        return 0; // Return 0 if unable to read the file
     }
 
     private void saveNewId(int newId) {
-        try (FileWriter fileWriter = new FileWriter("last_id.txt", false)) {
+        try (FileWriter fileWriter = new FileWriter("last_id.txt", false)) { // false to overwrite the file
             fileWriter.write(String.valueOf(newId));
         } catch (IOException e) {
             System.out.println("                                                                                        Error opening file: " + e.getMessage());
@@ -242,13 +277,23 @@ public class Enroll_Student {
     private List<Student.Subject> loadSubjectsFromCSV(String fileName) {
         List<Student.Subject> subjects = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File(fileName))) {
+            if (scanner.hasNextLine()) {
+                scanner.nextLine(); // Skip the header line
+            }
+
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                subjects.add(new Student.Subject(line));
+                if (!line.trim().isEmpty()) {
+                    // Extract only the subject name
+                    String subjectName = line.split(",")[0].trim(); // Get only the subject name
+                    subjects.add(new Student.Subject(subjectName)); // Assuming Subject class takes a string for the name
+                }
             }
         } catch (FileNotFoundException e) {
             System.out.println("                                                                                        Error loading file " + fileName + ": " + e.getMessage());
         }
         return subjects;
     }
+
 }
+
