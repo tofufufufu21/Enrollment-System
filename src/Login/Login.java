@@ -3,10 +3,14 @@ package Login;
 import java.util.Scanner;
 import User_Types.StudentMenu;
 import User_Types.UserType;
+import Registrar.Register;
 
 public class Login {
     private static final String CREDENTIALS_FILE = "registrar_credentials.txt";
     private static final Scanner scanner = new Scanner(System.in);
+    public static String currentUserType = "";  // Global variable to store the user type
+    private static final int MAX_ATTEMPTS = 5; // Maximum attempts allowed
+    private static int attempts = 0;
 
     public static void loginMenu() {
         char choice;
@@ -59,19 +63,27 @@ public class Login {
                 System.out.println("                                                                                        Returning to login menu...");
             }
         } else {
-            System.out.print("\n                                                                                              Enter Username: ");
-            String username = scanner.nextLine();
-            System.out.print("                                                                                                Enter Password: ");
-            String password = scanner.nextLine();
+            int attempts = 0;
+            while (attempts < MAX_ATTEMPTS) {
+                System.out.print("\n                                                                                              Enter Username: ");
+                String username = scanner.nextLine();
+                System.out.print("                                                                                                Enter Password: ");
+                String password = scanner.nextLine();
 
-            if (validateAdminLogin(username, password)) {
-                System.out.println("\n                                                                                        Login Successful!");
-                System.out.println("                                                                                        Press Enter to continue...");
-                scanner.nextLine();
-                UserType.user_type_menu(); // Redirecting to StudentMenu
-            } else {
-                System.out.println("\n                                                                                        Invalid Username or Password.");
+                if (validateAdminLogin(username, password)) {
+                    System.out.println("\n                                                                                        Login Successful!");
+                    System.out.println("                                                                                        Press Enter to continue...");
+                    currentUserType = "Admin"; // Set the user type to Admin
+                    UserType.user_type_menu(); // Redirecting to UserType menu
+                    return;
+                } else {
+                    attempts++;
+                    System.out.println("\n                                                                                        Invalid Username or Password. Attempt " + attempts + "/" + MAX_ATTEMPTS);
+                }
             }
+
+
+            Register.showMaxAttemptsMenu();
         }
     }
 
@@ -131,6 +143,7 @@ public class Login {
         // Now that everything is valid, save the credentials
         updateAdminCredentials(newUsername, newPassword, phone);
         System.out.println("\n                                                                                        Admin account created successfully!");
+        currentUserType = "Admin";  // Set the user type to Admin
         UserType.user_type_menu();
     }
 
@@ -144,6 +157,7 @@ public class Login {
 
     private static void studentLogin() {
         System.out.println("\n                                                                                        Student Login Successful!");
+        currentUserType = "Student";  // Set the user type to Student
         StudentMenu.student_menu();  // Direct to StudentMenu
     }
 }

@@ -31,14 +31,22 @@ public class StudentMenu {
 
             switch (choice) {
                 case '1':
-                    System.out.println("                                                                                        Redirecting to Accounting...");
-                    Accounting accounting = new Accounting(); // Create an instance of Accounting
-                    accounting.studentLogin();
+                    if ("Student".equals(Login.currentUserType)) {  // Check if logged in as Student
+                        System.out.println("                                                                                        Redirecting to Accounting...");
+                        Accounting accounting = new Accounting(); // Create an instance of Accounting
+                        accounting.studentLogin();
+                    } else {
+                        System.out.println("                                                                                        Access denied. You are logged in as " + Login.currentUserType + ".");
+                    }
                     break;
                 case '2':
-                    System.out.println("                                                                                        Redirecting to Student Dashboard...");
-                    Dashboard dashboard = new Dashboard(strands);
-                    dashboard.login(); // Add call to Student Dashboard
+                    if ("Student".equals(Login.currentUserType)) {  // Check if logged in as Student
+                        System.out.println("                                                                                        Redirecting to Student Dashboard...");
+                        Dashboard dashboard = new Dashboard(strands);
+                        dashboard.login(); // Add call to Student Dashboard
+                    } else {
+                        System.out.println("                                                                                        Access denied. You are logged in as " + Login.currentUserType + ".");
+                    }
                     break;
                 case '0':
                     while (true) {

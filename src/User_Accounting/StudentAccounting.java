@@ -5,7 +5,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import Enrollment.Student;
 import Enrollment.InitializeStrands;
-import User_Types.UserType;
+
 
 public class StudentAccounting {
     private static Scanner scanner = new Scanner(System.in);
@@ -21,7 +21,7 @@ public class StudentAccounting {
         // Check payment status
         if (student.getBalance() == 0) {
             System.out.println("                                                                                        You are already fully paid.");
-            Student.promptReturnToMenu(scanner);
+            Student.promptReturnBasedOnRole(scanner);
             return;
         }
 
@@ -31,8 +31,8 @@ public class StudentAccounting {
             scanner.nextLine();
 
             if (choice == 'n' || choice == 'N') {
-                Student.promptReturnToMenu(scanner);
-                continue;
+                Student.promptReturnBasedOnRole(scanner);
+                return;
             } else if (choice == 'y' || choice == 'Y') {
                 processPayment(student);
                 break;
@@ -40,57 +40,6 @@ public class StudentAccounting {
                 System.out.println("                                                                                        Invalid choice. Please enter 'y' or 'n'.");
             }
         }
-    }
-
-    private Student getStudentDetails(int studentId) {
-        String fileName = "student_" + studentId + ".csv";
-        File file = new File(fileName);
-
-        if (!file.exists()) {
-            System.out.println("                                                                                        Student file not found.");
-            return null;
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            // Read the header line
-            reader.readLine();
-
-            String line;
-            if ((line = reader.readLine()) != null) {
-                String[] studentData = line.split(","); // Ensure to use comma here
-                int id = Integer.parseInt(studentData[0].trim());
-                String name = studentData[1].trim();
-                String phoneNumber = studentData[2].trim();
-                String selectedStrandName = studentData[3].trim();
-                String paymentStatus = studentData[4].trim();
-                double balance = Double.parseDouble(studentData[5].trim());
-                String enrolledSubjects = studentData.length > 6 ? studentData[6].trim() : "";
-
-                // Load the strand with subjects
-                Student.Strand selectedStrand = loadStrand(selectedStrandName);
-                Student student = new Student(id, name, balance, phoneNumber, selectedStrand, paymentStatus);
-
-                // Load enrolled subjects if any
-                if (!enrolledSubjects.isEmpty()) {
-                    String[] subjects = enrolledSubjects.split(";");
-                    for (String subjectName : subjects) {
-                        student.addSubject(new Student.Subject(subjectName.trim()));
-                    }
-                }
-
-                return student;
-            }
-        } catch (IOException e) {
-            System.out.println("Error reading student file: " + e.getMessage());
-        } catch (NumberFormatException e) {
-            System.out.println("Error parsing balance data: " + e.getMessage());
-        }
-        return null;
-    }
-
-    private Student.Strand loadStrand(String strandName) {
-        String fileName = strandName + ".csv";
-        return initializeStrands.loadStrands(fileName);
     }
 
     private void processPayment(Student student) {
@@ -136,18 +85,71 @@ public class StudentAccounting {
         generateReceipt(student, paymentAmount, newBalance);
 
         System.out.println("                                                                                        Payment processed successfully.");
-        Student.promptReturnToMenu(scanner);
+        Student.promptReturnBasedOnRole(scanner);
+    }
+
+
+
+    private Student getStudentDetails(int studentId) {
+        String fileName = "student_" + studentId + ".csv";
+        File file = new File(fileName);
+
+        if (!file.exists()) {
+            System.out.println("                                                                                        Student file not found.");
+            return null;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            // Read the header line
+            reader.readLine();
+
+            String line;
+            if ((line = reader.readLine()) != null) {
+                String[] studentData = line.split(",");
+                int id = Integer.parseInt(studentData[0].trim());
+                String name = studentData[1].trim();
+                String phoneNumber = studentData[2].trim();
+                String selectedStrandName = studentData[3].trim();
+                String paymentStatus = studentData[4].trim();
+                double balance = Double.parseDouble(studentData[5].trim());
+                String enrolledSubjects = studentData.length > 6 ? studentData[6].trim() : "";
+
+                // Load the strand with subjects
+                Student.Strand selectedStrand = loadStrand(selectedStrandName);
+                Student student = new Student(id, name, balance, phoneNumber, selectedStrand, paymentStatus);
+
+                // Load enrolled subjects if any
+                if (!enrolledSubjects.isEmpty()) {
+                    String[] subjects = enrolledSubjects.split(";");
+                    for (String subjectName : subjects) {
+                        student.addSubject(new Student.Subject(subjectName.trim()));
+                    }
+                }
+
+                return student;
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading student file: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Error parsing balance data: " + e.getMessage());
+        }
+        return null;
+    }
+
+    private Student.Strand loadStrand(String strandName) {
+        String fileName = strandName + ".csv";
+        return initializeStrands.loadStrands(fileName);
     }
 
     private void updatePaymentInfoInFile(Student student) {
         String fileName = "student_" + student.getId() + ".csv";
         File file = new File(fileName);
-        File tempFile = new File("temp_" + fileName); // Temporary file to hold the updated data
+        File tempFile = new File("temp_" + fileName);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file));
              PrintWriter writer = new PrintWriter(new FileWriter(tempFile))) {
 
-            // Read the header line and write it to the temporary file
+            // Read and write the header
             if ((reader.readLine()) != null) {
                 writer.println("ID,Name,Phone Number,Strand,Payment Status,Balance,Enrolled Subjects");
             }
@@ -155,12 +157,8 @@ public class StudentAccounting {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] studentData = line.split(",");
-
-                // Only update payment status and balance, keeping other data unchanged
-                studentData[4] = student.getPaymentStatus(); // Update Payment Status
-                studentData[5] = String.valueOf(student.getBalance()); // Update Balance
-
-                // Write the updated line to the temporary file
+                studentData[4] = student.getPaymentStatus();
+                studentData[5] = String.valueOf(student.getBalance());
                 writer.println(String.join(",", studentData));
             }
 
@@ -168,12 +166,8 @@ public class StudentAccounting {
             System.out.println("Error updating student file: " + e.getMessage());
         }
 
-        // Replace the original file with the updated temporary file
-        if (!file.delete()) {
-            System.out.println("Could not delete the original file");
-        }
-        if (!tempFile.renameTo(file)) {
-            System.out.println("Could not rename the temporary file");
+        if (!file.delete() || !tempFile.renameTo(file)) {
+            System.out.println("Error replacing the file with updated information.");
         }
     }
 
@@ -181,9 +175,8 @@ public class StudentAccounting {
         System.out.println("\n                                                                                        --- Payment Receipt ---");
         System.out.printf("                                                                                        Student ID: %d\n", student.getId());
         System.out.printf("                                                                                        Name: %s\n", student.getName());
+        System.out.println("\nLAB_FEE = ₱5000\nPE_FEE = ₱5000\nIMMERSION_FEE = ₱5000\nLIBRARY_FEE = ₱5000\nWATER_ENERGY_FEE = ₱5000\n");
         System.out.printf("                                                                                        Amount Paid: %.2f\n", paymentAmount);
         System.out.printf("                                                                                        New Balance: %.2f\n", newBalance);
     }
-
-
 }

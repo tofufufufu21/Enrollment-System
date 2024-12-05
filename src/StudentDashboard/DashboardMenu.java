@@ -48,6 +48,7 @@ public class DashboardMenu {
                     break;
                 case "4":
                     System.out.println("                                                                                           Exiting...");
+                    Student.promptReturnBasedOnRole(scanner);
                     break;
                 default:
                     System.out.println("                                                                                           Invalid choice. Please try again.");

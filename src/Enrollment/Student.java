@@ -3,8 +3,8 @@ package Enrollment;
 //mga ibang class
 import User_Types.UserType;
 import Admin_Portal.AdminPortal;
-
-
+import User_Types.StudentMenu;
+import Login.Login;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -176,6 +176,36 @@ public class Student {
         }
     }
 
+
+    public static void promptReturnToStudentMenu(Scanner scanner) {
+        while (true) {
+            System.out.print("\n                                                                                        Do you want to go back to the Student Menu? (y/n): ");
+            char backChoice = scanner.next().charAt(0);
+            scanner.nextLine(); // Clear buffer
+
+            if (backChoice == 'y' || backChoice == 'Y') {
+                StudentMenu.student_menu(); // Change this to the method that takes the user back to the Student Menu
+                return;
+            } else if (backChoice == 'n' || backChoice == 'N') {
+                System.out.println("\n                                                                                        Continuing...");
+                return;
+            } else {
+                System.out.println("\n                                                                                        Invalid input! Please enter 'y' or 'n'.");
+                pressAnyKey();
+            }
+        }
+    }
+    public static void promptReturnBasedOnRole(Scanner scanner) {
+        if ("Student".equals(Login.currentUserType)) {
+            promptReturnToStudentMenu(scanner);
+        } else if ("Admin".equals(Login.currentUserType)) {
+            promptReturnToMenu(scanner);
+        } else {
+            System.out.println("\n⚠ User type not identified. Returning to the default menu.");
+        }
+    }
 }
+
+
 
 
