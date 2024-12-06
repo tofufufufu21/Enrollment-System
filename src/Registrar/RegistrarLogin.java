@@ -58,7 +58,7 @@ public class RegistrarLogin {
 
             // Password input with asterisks
             System.out.print("Enter Password: ");
-            password = maskPasswordInput();
+               password = scanner.nextLine();
 
             if (userValidateRegistrarLogin(username, password)) {
                 System.out.println("\nLogin Successful!\n");
@@ -74,15 +74,7 @@ public class RegistrarLogin {
         Register.showMaxAttemptsMenu();
     }
 
-    private static String maskPasswordInput() {
-        char[] passwordArray = System.console().readPassword();
-        String password = new String(passwordArray);
-        return maskPassword(password);
-    }
 
-    private static String maskPassword(String password) {
-        return "*".repeat(password.length());
-    }
 
     private static boolean userValidateRegistrarLogin(String username, String password) {
         try (Scanner fileScanner = new Scanner(new File(CREDENTIALS_FILE))) {
