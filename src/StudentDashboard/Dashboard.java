@@ -37,6 +37,7 @@ public class Dashboard {
                     break; // Exit the loop after successful login
                 } else {
                     System.out.println("\n                                                                                           Student not found. Please try again.\n");
+                    Student.promptReturnBasedOnRole(scanner);
                 }
             } catch (NumberFormatException e) {
                 System.out.println("\n                                                                                   Invalid input. Please enter a valid numeric Student ID.\n");
