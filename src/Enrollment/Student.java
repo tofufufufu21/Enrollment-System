@@ -271,9 +271,7 @@ public class Student {
 
             if (choice.equals("y")) {
                 // Check the current user type
-                if ("Student".equals(userType)) {
-                    StudentMenu.student_menu();
-                } else if ("Admin".equals(userType)) {
+                  if ("Admin".equals(userType)) {
                     UserType.user_type_menu();
                 }
                 return; // Exit the function after navigating back to the menu
