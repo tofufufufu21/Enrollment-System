@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
+
+import Enrollment.Student;
 import Login.Login;
 
 public class Register {
@@ -163,7 +165,7 @@ public class Register {
                     resetCredentials();
                     return;
                 case '0':
-                    Login.loginMenu();
+                    Student.promptToGoBack(Login.currentUserType);
                     return;
                 default:
                     System.out.println("\nInvalid input. Please select a valid option.");

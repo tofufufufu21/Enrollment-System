@@ -7,6 +7,8 @@ import User_Types.UserType;
 import Admin_Portal.AdminPortal;
 import User_Types.StudentMenu;
 import Login.Login;
+import Registrar.Register;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -252,6 +254,32 @@ public class Student {
             } else if (choice.equals("n")) {
                 DashboardMenu dashboardMenu = new DashboardMenu();
                 dashboardMenu.showMenu(student);
+                return;
+            } else {
+                System.out.println("\n                                                                                        =======================================");
+                System.out.println("                                                                                        Invalid input. Please enter 'y' or 'n'.");
+                System.out.println("                                                                                        =======================================");
+            }
+        }
+    }
+
+    public static void promptToGoBack(String userType) {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.print("                                                                                        Do you want to go back to the menu (y/n)? ");
+            String choice = scanner.nextLine().trim().toLowerCase();
+
+            if (choice.equals("y")) {
+                // Check the current user type
+                if ("Student".equals(userType)) {
+                    StudentMenu.student_menu();
+                } else if ("Admin".equals(userType)) {
+                    UserType.user_type_menu();
+                }
+                return; // Exit the function after navigating back to the menu
+            } else if (choice.equals("n")) {
+                Register register = new Register();
+                register.showMaxAttemptsMenu(); // Restart the process
                 return;
             } else {
                 System.out.println("\n                                                                                        =======================================");
