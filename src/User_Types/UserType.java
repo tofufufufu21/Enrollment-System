@@ -64,13 +64,12 @@ public class UserType {
                         System.out.println("\n                                                                                        Going back to menu.....");
                         Login.loginMenu();
                     } else if (option == 'n' || option == 'N') {
-                        break;
+                        user_type_menu();
                     } else {
                         System.out.println("                                                                                        Invalid option. Press Enter to continue...");
                         scanner.nextLine();
                     }
                 }
-                break;
 
             default:
                 System.out.println("\n                                                                                        Invalid input. Press Enter to continue...");

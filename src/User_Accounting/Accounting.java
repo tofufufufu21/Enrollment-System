@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import Enrollment.Student;
-import User_Types.UserType;
+import Login.Login;
+
+
 
 public class Accounting {
     private static Scanner scanner = new Scanner(System.in);
@@ -13,6 +15,7 @@ public class Accounting {
     public void studentLogin() {
         int studentId = 0;
         boolean validInput = false;
+
 
         while (!validInput) {
             try {
@@ -29,30 +32,35 @@ public class Accounting {
             }
         }
 
-        // Check if the student exists and get their details
-        Student student = getStudentDetails(studentId);
-        if (student == null) {
-            System.out.println("\n                                                                                        =======================================");
-            System.out.println("                                                                                                  Student not found.");
-            System.out.println("                                                                                        =======================================");
-            Student.pressAnyKey();
-            return;
-        }
+        while (true) { // Loop until user decides to exit or continues
+            // Check if the student exists and get their details
+            Student student = getStudentDetails(studentId);
+            if (student == null) {
+                System.out.println("\n                                                                                        =======================================");
+                System.out.println("                                                                                                  Student not found.");
+                System.out.println("                                                                                        =======================================");
 
-        // Check the payment status
-        if (student.getBalance() == 0) {
-            System.out.println("\n                                                                                        =======================================");
-            System.out.println("                                                                                             You are already fully paid.");
-            System.out.println("                                                                                        =======================================");
-            Student.promptReturnToMenu(scanner);
-            return;
-        } else {
-            // Print student information
-            displayStudentInfo(student);
+                // Prompt user if they want to go back to the menu
+                Student.promptToGoBackOrRestartAccounting(Login.currentUserType);
+            }
 
-            // Direct to StudentAccounting for payment processing
-            StudentAccounting studentAccounting = new StudentAccounting();
-            studentAccounting.loadStudentDashboard(studentId);
+            // Check the payment status
+            if (student.getBalance() == 0) {
+                System.out.println("\n                                                                                        =======================================");
+                System.out.println("                                                                                             You are already fully paid.");
+                System.out.println("                                                                                        =======================================");
+
+                // Prompt user if they want to go back to the menu
+                Student.promptToGoBackOrRestartAccounting(Login.currentUserType);
+            } else {
+                // Print student information
+                displayStudentInfo(student);
+
+                // Direct to StudentAccounting for payment processing
+                StudentAccounting studentAccounting = new StudentAccounting();
+                studentAccounting.loadStudentDashboard(studentId);
+                return; // Exit after processing
+            }
         }
     }
 

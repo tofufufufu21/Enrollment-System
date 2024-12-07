@@ -58,13 +58,12 @@ public class StudentMenu {
                             System.out.println("\n                                                                                        Thank you.....");
                             Login.loginMenu();
                         } else if (option == 'n' || option == 'N') {
-                            break;  // Exit the confirmation loop and return to the main menu
+                            student_menu(); // Exit the confirmation loop and return to the main menu
                         } else {
                             System.out.println("                                                                                        Invalid option. Press Enter to continue...");
                             scanner.nextLine();
                         }
                     }
-                    break;
 
                 default:
                     System.out.println("\nInvalid input. Press Enter to continue...");

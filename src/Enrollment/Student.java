@@ -1,6 +1,8 @@
 package Enrollment;
 
 //mga ibang class
+import StudentDashboard.DashboardMenu;
+import User_Accounting.Accounting;
 import User_Types.UserType;
 import Admin_Portal.AdminPortal;
 import User_Types.StudentMenu;
@@ -9,6 +11,8 @@ import Login.Login;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+
 
 public class Student {
     // Constants
@@ -169,7 +173,8 @@ public class Student {
                 return;
             } else if (response.equals("n")) {
                 System.out.println("                                                                                        Continuing...\n");
-                break;
+                Accounting accounting = new Accounting(); // Create an instance of Accounting
+                accounting.studentLogin();
             } else {
                 System.out.println("\n                                                                                        Invalid input. Please enter 'y' or 'n'.\n");
             }
@@ -202,6 +207,57 @@ public class Student {
             promptReturnToMenu(scanner);
         } else {
             System.out.println("\n⚠ User type not identified. Returning to the default menu.");
+        }
+    }
+
+    public static void promptToGoBackOrRestartAccounting(String userType) {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.print("                                                                                        Do you want to go back to the menu (y/n)? ");
+            String choice = scanner.nextLine().trim().toLowerCase();
+
+            if (choice.equals("y")) {
+                // Check the current user type
+                if ("Student".equals(userType)) {
+                    StudentMenu.student_menu();
+                } else if ("Admin".equals(userType)) {
+                    UserType.user_type_menu();
+                }
+                return; // Exit the function after navigating back to the menu
+            } else if (choice.equals("n")) {
+                Accounting accounting = new Accounting();
+                accounting.studentLogin(); // Restart the process
+                return;
+            } else {
+                System.out.println("\n                                                                                        =======================================");
+                System.out.println("                                                                                        Invalid input. Please enter 'y' or 'n'.");
+                System.out.println("                                                                                        =======================================");
+            }
+        }
+    }
+    public static void promptToGoBackOrRestartDashboard(String userType, Student student) {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.print("                                                                                        \nDo you want to go back to the menu (y/n)? ");
+            String choice = scanner.nextLine().trim().toLowerCase();
+
+            if (choice.equals("y")) {
+                // Check the current user type
+                if ("Student".equals(userType)) {
+                    StudentMenu.student_menu();
+                } else if ("Admin".equals(userType)) {
+                    UserType.user_type_menu();
+                }
+                return; // Exit the function after navigating back to the menu
+            } else if (choice.equals("n")) {
+                DashboardMenu dashboardMenu = new DashboardMenu();
+                dashboardMenu.showMenu(student);
+                return;
+            } else {
+                System.out.println("\n                                                                                        =======================================");
+                System.out.println("                                                                                        Invalid input. Please enter 'y' or 'n'.");
+                System.out.println("                                                                                        =======================================");
+            }
         }
     }
 }

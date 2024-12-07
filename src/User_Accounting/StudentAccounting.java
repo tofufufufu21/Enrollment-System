@@ -5,7 +5,8 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import Enrollment.Student;
 import Enrollment.InitializeStrands;
-
+import Login.Login;
+import User_Accounting.Accounting;
 
 public class StudentAccounting {
     private static Scanner scanner = new Scanner(System.in);
@@ -13,25 +14,13 @@ public class StudentAccounting {
 
     public void loadStudentDashboard(int studentId) {
         Student student = getStudentDetails(studentId);
-        if (student == null) {
-            System.out.println("                                                                                        Student not found.");
-            return;
-        }
-
-        // Check payment status
-        if (student.getBalance() == 0) {
-            System.out.println("                                                                                        You are already fully paid.");
-            Student.promptReturnBasedOnRole(scanner);
-            return;
-        }
-
         while (true) {
             System.out.print("\n                                                                                        Do you want to make a payment? (y/n): ");
             char choice = scanner.next().charAt(0);
             scanner.nextLine();
 
             if (choice == 'n' || choice == 'N') {
-                Student.promptReturnBasedOnRole(scanner);
+                Student.promptToGoBackOrRestartAccounting(Login.currentUserType);
                 return;
             } else if (choice == 'y' || choice == 'Y') {
                 processPayment(student);
@@ -70,6 +59,7 @@ public class StudentAccounting {
         if (newBalance < 0) {
             System.out.println("                                                                                        Payment exceeds the current balance. Please enter a valid amount.");
             Student.pressAnyKey();
+            processPayment(student);
             return;
         }
 

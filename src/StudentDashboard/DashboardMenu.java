@@ -1,6 +1,7 @@
 package StudentDashboard;
 
 import Enrollment.Student;
+import Login.Login;
 
 import java.util.Scanner;
 
@@ -48,7 +49,7 @@ public class DashboardMenu {
                     break;
                 case "4":
                     System.out.println("                                                                                           Exiting...");
-                    Student.promptReturnBasedOnRole(scanner);
+                    Student.promptToGoBackOrRestartDashboard(Login.currentUserType, student);
                     break;
                 default:
                     System.out.println("                                                                                           Invalid choice. Please try again.");
