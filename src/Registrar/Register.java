@@ -150,7 +150,7 @@ public class Register {
     public static void showMaxAttemptsMenu() {
         System.out.println("\nYou have reached the maximum number of login attempts.");
         System.out.println("=====================================================================================");
-        System.out.println("||  [1] Forgot Password?           ||");
+        System.out.println("||  [1] Forgot Credentials?           ||");
         System.out.println("||  [0] Go Back to Menu            ||");
         System.out.println("=====================================================================================");
 
