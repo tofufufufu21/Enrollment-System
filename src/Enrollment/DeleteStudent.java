@@ -17,7 +17,35 @@ public class DeleteStudent {
             System.out.println("\n                                                                                        =======================================");
             System.out.println("                                                                                           Error: Student file '" + fileName + "' not found!");
             System.out.println("                                                                                        =======================================");
-            return;
+            while (true) {
+                System.out.print("\n                                                                                        Would you like to go back to the dashboard? (y/n): ");
+                String response = scanner.nextLine().trim().toLowerCase();
+                if (response.equals("y")) {
+                    System.out.println("\n\n\n\n\n");
+                    System.out.println("\n                                                                                        =======================================");
+                    System.out.println("                                                                                           Returning to the Dashboard...\n");
+                    System.out.println("                                                                                        =======================================");
+                    return; // Exit the method to go back to the dashboard
+                } else if (response.equals("n")) {
+                    System.out.println("\n\n\n\n\n");
+                    System.out.println("\n                                                                                        =======================================");
+                    System.out.println("                                                                                             Continuing to delete for another student...\n");
+                    System.out.println("                                                                                        =======================================");
+                    idToDelete = getValidStudentId(adminName, students, studentCount); // Restart process
+                    fileName = "student_" + idToDelete + ".csv"; // Update file name for new ID
+                    file = new File(fileName); // Update file reference
+                    if (file.exists()) {
+                        break; // File exists, proceed to confirmation
+                    } else {
+                        // Continue the loop since the new file also does not exist
+                        System.out.println("\n                                                                                        =======================================");
+                        System.out.println("                                                                                           Error: Student file '" + fileName + "' not found!");
+                        System.out.println("                                                                                        =======================================");
+                    }
+                } else {
+                    System.out.println("\n                                                                                        Invalid input. Please enter 'y' or 'n'.\n");
+                }
+            }
         }
 
         // Ask for confirmation before deleting

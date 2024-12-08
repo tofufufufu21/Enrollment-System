@@ -28,7 +28,25 @@ public class EditStudent {
 
                 if (!file.exists()) {
                     System.out.println("\n                                                                                        Error: Student file '" + fileName + "' not found!");
-                    // If the file is not found, prompt the user again for the student ID
+                    while (true) {
+                        System.out.print("\n                                                                                        Would you like to go back to the dashboard? (y/n): ");
+                        String response = scanner.nextLine().trim().toLowerCase();
+                        if (response.equals("y")) {
+                            System.out.println("\n\n\n\n\n");
+                            System.out.println("\n                                                                                        =======================================");
+                            System.out.println("                                                                                           Returning to the Dashboard...\n");
+                            System.out.println("                                                                                        =======================================");
+                            return; // Exit the method to go back to the dashboard
+                        } else if (response.equals("n")) {
+                            System.out.println("\n\n\n\n\n");
+                            System.out.println("\n                                                                                        =======================================");
+                            System.out.println("                                                                                             Continuing to edit a student...\n");
+                            System.out.println("                                                                                        =======================================");
+                            break; // Exit the inner loop to search another student
+                        } else {
+                            System.out.println("\n                                                                                        Invalid input. Please enter 'y' or 'n'.\n");
+                        }
+                    }// If the file is not found, prompt the user again for the student ID
                 } else {
                     // If the file exists, break out of the loop
                     break;
