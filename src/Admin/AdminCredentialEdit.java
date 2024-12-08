@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 import Enrollment.Student;
+import User_Types.UserType;
 
 public class AdminCredentialEdit {
     private static final String CREDENTIALS_FILE = "registrar_credentials.txt"; // Adjust path if needed
@@ -40,7 +41,7 @@ public class AdminCredentialEdit {
         System.out.println("\nCredentials updated successfully!");
 
         // Return to role-specific menu
-        Student.promptReturnBasedOnRole(scanner);
+        UserType.user_type_menu();
     }
 
     private static String editField(Scanner scanner, String fieldName, String currentValue) {
