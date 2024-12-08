@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import Enrollment.InitializeStrands;
 import Enrollment.Student;
-import Admin_Portal.AdminPortal;
+import Admin_Portal.RegistrarDashboard;
 
 public class RegistrarLogin {
     private static final String CREDENTIALS_FILE = "registrar_credentials.txt";
@@ -62,7 +62,7 @@ public class RegistrarLogin {
 
             if (userValidateRegistrarLogin(username, password)) {
                 System.out.println("\nLogin Successful!\n");
-                AdminPortal.adminPortal(username, students, studentCount);
+                RegistrarDashboard.adminPortal(username, students, studentCount);
                 return;
             } else {
                 attempts++;

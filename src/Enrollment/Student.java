@@ -4,7 +4,7 @@ package Enrollment;
 import StudentDashboard.DashboardMenu;
 import User_Accounting.Accounting;
 import User_Types.UserType;
-import Admin_Portal.AdminPortal;
+import Admin_Portal.RegistrarDashboard;
 import User_Types.StudentMenu;
 import Login.Login;
 import Registrar.Register;
@@ -171,7 +171,7 @@ public class Student {
 
             if (response.equals("y")) {
                 System.out.println("                                                                                        Returning to Admin Portal...\n");
-                AdminPortal.adminPortal(adminName, students, studentCount); // Return to Admin Portal
+                RegistrarDashboard.adminPortal(adminName, students, studentCount); // Return to Admin Portal
                 return;
             } else if (response.equals("n")) {
                 System.out.println("                                                                                        Continuing...\n");

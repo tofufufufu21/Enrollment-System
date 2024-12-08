@@ -12,7 +12,7 @@ import User_Types.UserType;
 import java.util.List;
 import java.util.Scanner;
 
-public class AdminPortal {
+public class RegistrarDashboard {
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void adminPortal(String name, Student[] students, int[] studentCount) {
