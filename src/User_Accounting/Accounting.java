@@ -21,7 +21,7 @@ public class Accounting {
             try {
                 System.out.println("\n\n\n\n\n");
                 System.out.print("\n                                                                                        =======================================");
-                System.out.print("\n                                                                                        Please enter your Student ID: ");
+                System.out.print("\n                                                                                        Please enter the Student ID: ");
                 studentId = Integer.parseInt(scanner.nextLine().trim()); // Parse input as integer
                 validInput = true; // Exit loop if input is valid
             } catch (NumberFormatException e) {
