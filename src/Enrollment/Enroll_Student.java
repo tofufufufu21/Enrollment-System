@@ -152,14 +152,13 @@ public class Enroll_Student {
                 boolean validInput = false;
                 while (!validInput) {
                     System.out.printf("                                                                                Do you want to enroll in \"%s\"? (y/n): ", subject.getSubjectName());
-                    char enroll = scanner.next().charAt(0); // Read the character input
-                    scanner.nextLine();  // Consume the newline after the char input
+                    String input = scanner.nextLine().trim(); // Read the entire input and trim whitespace
 
-                    if (enroll == 'y' || enroll == 'Y') {
-                        newStudent.addSubject(subject); // Add subject to student
-                        validInput = true;
-                    } else if (enroll == 'n' || enroll == 'N') {
-                        validInput = true; // No action needed, just mark input as valid
+                    if (input.length() == 1 && (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("n"))) {
+                        if (input.equalsIgnoreCase("y")) {
+                            newStudent.addSubject(subject); // Add subject to student
+                        }
+                        validInput = true; // Mark input as valid
                     } else {
                         System.out.println("                                                                                   Invalid input. Please enter 'y' for yes or 'n' for no.");
                     }
@@ -185,17 +184,18 @@ public class Enroll_Student {
                 }
 
                 System.out.print("\n                                                                                        Are you sure you want to enroll? (y/n): ");
-                confirmation = scanner.next().charAt(0);
-                scanner.nextLine();
+                String confirmationInput = scanner.nextLine().trim(); // Read the entire input
 
-                if (confirmation == 'y' || confirmation == 'Y') {
-                    System.out.println("                                                                                        Enrolling you now...\n");
-                    break;
-                } else if (confirmation == 'n' || confirmation == 'N') {
-                    System.out.println("                                                                                        Enrollment cancelled.\n");
-                    return;
+                if (confirmationInput.length() == 1 && (confirmationInput.equalsIgnoreCase("y") || confirmationInput.equalsIgnoreCase("n"))) {
+                    if (confirmationInput.equalsIgnoreCase("y")) {
+                        System.out.println("                                                                                        Enrolling you now...\n");
+                        break;
+                    } else if (confirmationInput.equalsIgnoreCase("n")) {
+                        System.out.println("                                                                                        Enrollment cancelled.\n");
+                        return;
+                    }
                 } else {
-                    System.out.println("                                                                                        Invalid input. Please enter 'y' or 'n'.");
+                    System.out.println("                                                                                        \nInvalid input. Please enter 'y' or 'n'.");
                 }
             } while (true);
 
