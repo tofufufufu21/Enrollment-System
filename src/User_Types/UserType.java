@@ -74,7 +74,7 @@ public class UserType {
             default:
                 System.out.println("\n                                                                                        Invalid input. Press Enter to continue...");
                 scanner.nextLine();
-                break;
+                user_type_menu();
         }
         System.out.println();  // For a cleaner new line
     }

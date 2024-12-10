@@ -94,9 +94,10 @@ public class Enroll_Student {
 
             if (input.length() == 1 && Character.isDigit(input.charAt(0))) {
                 choice = input.charAt(0); // Get the first character if it's a valid digit
-                break; // Exit the loop if valid
+                if (choice >= '1' && choice <= '8') {
+                    break; // Exit the loop if valid
+                }
             }
-
             // Print invalid message without re-prompting
             System.out.println("\n                                                                                        ----------------------------------------");
             System.out.println("                                                                                         Invalid choice! Please enter a valid number.");
