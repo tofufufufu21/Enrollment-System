@@ -7,227 +7,232 @@ public class DeleteStudent {
     private static Scanner scanner = new Scanner(System.in);
 
     public void deleteStudent(String adminName, Student[] students, int[] studentCount) {
-        int idToDelete = getValidStudentId(adminName, students, studentCount); // Get valid student ID input
+        int idToDeactivate = getValidStudentId(adminName, students, studentCount); // Get valid student ID input
 
         // Construct the filename based on student ID
-        String fileName = "student_" + idToDelete + ".csv"; // Ensure this file exists in the working directory
+        String fileName = "student_" + idToDeactivate + ".csv"; // Ensure this file exists in the working directory
         File file = new File(fileName);
 
         if (!file.exists()) {
             System.out.println("\n                                                                                        =======================================");
             System.out.println("                                                                                           Error: Student file '" + fileName + "' not found!");
             System.out.println("                                                                                        =======================================");
-            while (true) {
-                System.out.print("\n                                                                                        Would you like to go back to the dashboard? (y/n): ");
-                String response = scanner.nextLine().trim().toLowerCase();
-                if (response.equals("y")) {
-                    System.out.println("\n\n\n\n\n");
-                    System.out.println("\n                                                                                        =======================================");
-                    System.out.println("                                                                                           Returning to the Dashboard...\n");
-                    System.out.println("                                                                                        =======================================");
-                    return; // Exit the method to go back to the dashboard
-                } else if (response.equals("n")) {
-                    System.out.println("\n\n\n\n\n");
-                    System.out.println("\n                                                                                        =======================================");
-                    System.out.println("                                                                                             Continuing to delete for another student...\n");
-                    System.out.println("                                                                                        =======================================");
-                    idToDelete = getValidStudentId(adminName, students, studentCount); // Restart process
-                    fileName = "student_" + idToDelete + ".csv"; // Update file name for new ID
-                    file = new File(fileName); // Update file reference
-                    if (file.exists()) {
-                        break; // File exists, proceed to confirmation
-                    } else {
-                        // Continue the loop since the new file also does not exist
-                        System.out.println("\n                                                                                        =======================================");
-                        System.out.println("                                                                                           Error: Student file '" + fileName + "' not found!");
-                        System.out.println("                                                                                        =======================================");
-                    }
-                } else {
-                    System.out.println("\n                                                                                        Invalid input. Please enter 'y' or 'n'.\n");
-                }
-            }
+            returnToDashboard(adminName, students, studentCount);
+            return;
         }
 
-        // Ask for confirmation before deleting
+        // Check the current status of the student
+        String currentStatus = getCurrentStatus(file);
+        if (currentStatus == null) {
+            return;
+        }
+
+        if ("Active".equalsIgnoreCase(currentStatus)) {
+            System.out.println("\n                                                                                        =======================================");
+            System.out.println("                                                                                           Student is already ACTIVE.");
+            System.out.println("                                                                                        =======================================");
+        } else if ("INACTIVE".equalsIgnoreCase(currentStatus)) {
+            System.out.println("\n                                                                                        =======================================");
+            System.out.println("                                                                                           Student is already INACTIVE.");
+            System.out.println("                                                                                        =======================================");
+        }
+
+        // Ask for confirmation before updating status
         char confirm;
         while (true) {
             try {
                 System.out.println("\n                                                                                        =======================================");
-                System.out.println("                                                                                               Confirm Student Deletion       ");
+                System.out.println("                                                                                           Do you want to make this student ACTIVE or INACTIVE?");
                 System.out.println("                                                                                        =======================================");
-                System.out.print("                                                                                        Do you really want to delete this student? (y/n): ");
+                System.out.println("                                                                                        0. Make INACTIVE");
+                System.out.println("                                                                                        1. Make ACTIVE");
+                System.out.print("                                                                                        Enter your choice (1/0): ");
                 confirm = scanner.next().charAt(0);
-                scanner.nextLine();  // Consume newline
+                scanner.nextLine(); // Consume newline
 
-                if (confirm == 'y' || confirm == 'Y') {
-                    break;  // Proceed with deletion if 'y' is entered
-                } else if (confirm == 'n' || confirm == 'N') {
-                    System.out.println("\n                                                                                        Deletion canceled.");
-                    idToDelete = getValidStudentId(adminName, students, studentCount);
+                if (confirm == '1') {
+                    if ("Active".equalsIgnoreCase(currentStatus)) {
+                        System.out.println("\n                                                                                        Student is already ACTIVE.");
+                        returnToDashboard(adminName, students, studentCount);
+                        return;
+                    }
+                    if (updateStudentStatus(file, "Active")) {
+                        System.out.println("\n                                                                                        =======================================");
+                        System.out.println("                                                                                           Student with ID " + idToDeactivate + " has been marked as ACTIVE.");
+                        System.out.println("                                                                                        =======================================");
+                    } else {
+                        System.out.println("\n                                                                                        =======================================");
+                        System.out.println("                                                                                           Error updating the student status.");
+                        System.out.println("                                                                                        =======================================");
+                    }
+                    break;
+                } else if (confirm == '0') {
+                    if ("INACTIVE".equalsIgnoreCase(currentStatus)) {
+                        System.out.println("\n                                                                                        Student is already INACTIVE.");
+                        returnToDashboard(adminName, students, studentCount);
+                        return;
+                    }
+                    if (updateStudentStatus(file, "INACTIVE")) {
+                        System.out.println("\n                                                                                        =======================================");
+                        System.out.println("                                                                                           Student with ID " + idToDeactivate + " has been marked as INACTIVE.");
+                        System.out.println("                                                                                        =======================================");
+                    } else {
+                        System.out.println("\n                                                                                        =======================================");
+                        System.out.println("                                                                                           Error updating the student status.");
+                        System.out.println("                                                                                        =======================================");
+                    }
+                    break;
                 } else {
-                    // If the input is not 'y', 'Y', 'n', or 'N', print invalid input and loop again
-                    System.out.println("\n                                                                                        Invalid input. Please enter 'y' or 'n'.");
-                    Student.pressAnyKey();
+                    System.out.println("\n                                                                                        Invalid input. Please enter '1' to activate or '0' to deactivate.");
                 }
             } catch (Exception e) {
-                // Catch any other unexpected input errors (e.g., input mismatch) and prompt for retry
-                System.out.println("\n                                                                                        Invalid input. Please enter 'y' or 'n'.");
-                Student.pressAnyKey();
+                System.out.println("\n                                                                                        Invalid input. Please enter '1' or '0'.");
                 scanner.nextLine(); // Clear the buffer to prevent infinite loop
             }
         }
 
-        // Delete the file
-        if (file.delete()) {
-            System.out.println("\n                                                                                        =======================================");
-            System.out.println("                                                                                          Student with ID " + idToDelete + " has been deleted.");
-            System.out.println("                                                                                        =======================================");
-            shiftStudentIds(idToDelete); // Shift IDs of subsequent students
-            updateLastId(); // Update last_id.txt after deletion
-        } else {
-            System.out.println("\n                                                                                        =======================================");
-            System.out.println("                                                                                             Error deleting the student file.");
-            System.out.println("                                                                                        =======================================");
-        }
+        // Ask if user wants to go back to the dashboard
+        returnToDashboard(adminName, students, studentCount);
     }
 
-    private int getValidStudentId(String adminName, Student[] students, int[] studentCount) {
-        int idToDelete = -1;
-        while (true) {
-            try {
-                System.out.print("\n                                                                                        =======================================");
-                System.out.print("\n                                                                                        Enter Student ID to delete: ");
-                idToDelete = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
-
-                if (idToDelete < 0) {
-                    System.out.println("\n                                                                                        =======================================");
-                    System.out.println("                                                                                      Invalid input. Please enter a valid student ID.");
-                    System.out.println("                                                                                        =======================================");
-                    Student.pressAnyKey();
-                    Student.PromptCancelToMenu(scanner, adminName, students, studentCount);
-                    scanner.nextLine();
-                } else {
-                    break;
-                }
-            } catch (Exception e) {
-                System.out.println("\n                                                                                        =======================================");
-                System.out.println("                                                                                          Invalid input. Please enter a valid student ID.");
-                System.out.println("                                                                                        =======================================");
-                scanner.nextLine(); // Consume invalid input
-                Student.pressAnyKey();
-                Student.PromptCancelToMenu(scanner, adminName, students, studentCount);
-            }
-        }
-        return idToDelete;
-    }
-
-    private void shiftStudentIds(int deletedId) {
-        // Start from the deleted ID and shift every student file with a higher ID
-        int currentId = deletedId;
-
-        // Loop to check for subsequent student files that need their IDs decremented
-        while (true) {
-            String currentFileName = "student_" + (currentId + 1) + ".csv";
-            File currentFile = new File(currentFileName);
-
-            // If the file for the next student ID does not exist, stop shifting
-            if (!currentFile.exists()) {
-                break;
-            }
-
-            // Rename the current student file to the new ID (shifting down by 1)
-            String newFileName = "student_" + currentId + ".csv";
-            File newFile = new File(newFileName);
-
-            if (currentFile.renameTo(newFile)) {
-                System.out.println("\n                                                                                        =======================================");
-                System.out.println("                                                                                         Renamed student file from ID " + (currentId + 1) + " to " + currentId);
-                System.out.println("                                                                                        =======================================");
-
-                // Now, update the student ID inside the renamed file
-                updateStudentIdInFile(newFile, currentId);
-            } else {
-                System.out.println("\n                                                                                        =======================================");
-                System.out.println("                                                                                         Error renaming file '" + currentFileName + "' to '" + newFileName + "'.");
-                System.out.println("                                                                                        =======================================");
-                break;
-            }
-
-            // Move to the next ID
-            currentId++;
-        }
-    }
-
-    private void updateStudentIdInFile(File studentFile, int newId) {
+    private boolean updateStudentStatus(File studentFile, String newStatus) {
         File tempFile = new File("temp_update.csv");
+        boolean statusUpdated = false;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(studentFile));
              BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
 
             String line = reader.readLine(); // Read the header
             if (line != null) {
-                writer.write(line + System.lineSeparator()); // Write header to temp file
+                String[] headers = line.split(","); // Split header line to find column names
+                int statusIndex = -1;
+
+                // Find the column index for 'StudentStatus'
+                for (int i = 0; i < headers.length; i++) {
+                    if (headers[i].trim().equalsIgnoreCase("StudentStatus")) {
+                        statusIndex = i;
+                        break;
+                    }
+                }
+
+                if (statusIndex == -1) {
+                    System.out.println("\n                                                                                        =======================================");
+                    System.out.println("                                                                                           Error: 'StudentStatus' column not found in the CSV file.");
+                    System.out.println("                                                                                        =======================================");
+                    return false;
+                }
+
+                writer.write(line + System.lineSeparator()); // Write the header to temp file
 
                 line = reader.readLine(); // Read the student data
                 if (line != null) {
                     String[] studentData = line.split(","); // Split the student data by commas
-                    studentData[0] = String.valueOf(newId); // Update the student ID
 
-                    // Write the updated student data to temp file
+                    // Update the 'StudentStatus' field
+                    studentData[statusIndex] = newStatus; // Change status to the new status
+                    statusUpdated = true;
+
+                    // Write the updated student data to the temp file
                     writer.write(String.join(",", studentData) + System.lineSeparator());
                 }
             }
 
         } catch (IOException e) {
             System.out.println("\n                                                                                        =======================================");
-            System.out.println("                                                                                           Error updating student ID: " + e.getMessage());
-            System.out.println("                                                                                         =======================================");
+            System.out.println("                                                                                           Error updating student status: " + e.getMessage());
+            System.out.println("                                                                                        =======================================");
         }
 
         // Replace the original file with the updated file
         if (studentFile.delete() && tempFile.renameTo(studentFile)) {
-            System.out.println("\n                                                                                        =======================================");
-            System.out.println("                                                                                           Student ID inside the file updated to " + newId);
-            System.out.println("                                                                                        =======================================");
+            return statusUpdated;
         } else {
             System.out.println("\n                                                                                        =======================================");
-            System.out.println("                                                                                           Error updating the student file.");
+            System.out.println("                                                                                           Error replacing the student file.");
             System.out.println("                                                                                        =======================================");
+            return false;
         }
     }
 
-    private void updateLastId() {
-        // Read the last ID from last_id.txt
-        int lastId = 0;
-        File lastIdFile = new File("last_id.txt");
+    private String getCurrentStatus(File studentFile) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(studentFile))) {
+            String line = reader.readLine(); // Read the header
+            if (line != null) {
+                String[] headers = line.split(","); // Split header line to find column names
+                int statusIndex = -1;
 
-        // Check if last_id.txt exists
-        if (lastIdFile.exists()) {
-            try (BufferedReader br = new BufferedReader(new FileReader(lastIdFile))) {
-                String line = br.readLine();
-                if (line != null) {
-                    lastId = Integer.parseInt(line.trim());
+                // Find the column index for 'StudentStatus'
+                for (int i = 0; i < headers.length; i++) {
+                    if (headers[i].trim().equalsIgnoreCase("StudentStatus")) {
+                        statusIndex = i;
+                        break;
+                    }
                 }
-            } catch (IOException e) {
-                System.out.println("\n                                                                                        =======================================");
-                System.out.println("                                                                                           Error reading last_id.txt: " + e.getMessage());
-                System.out.println("                                                                                        =======================================");
+
+                if (statusIndex == -1) {
+                    System.out.println("\n                                                                                        =======================================");
+                    System.out.println("                                                                                           Error: 'StudentStatus' column not found in the CSV file.");
+                    System.out.println("                                                                                        =======================================");
+                    return null;
+                }
+
+                line = reader.readLine(); // Read the student data
+                if (line != null) {
+                    String[] studentData = line.split(","); // Split the student data by commas
+                    return studentData[statusIndex].trim(); // Return the current status
+                }
             }
-        }
 
-        // Decrement the last ID if necessary
-        if (lastId > 0) {
-            lastId--; // Decrement the ID after deletion
-        }
-
-        // Write the new last ID back to last_id.txt
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(lastIdFile))) {
-            bw.write(String.valueOf(lastId));
         } catch (IOException e) {
             System.out.println("\n                                                                                        =======================================");
-            System.out.println("                                                                                           Error updating last_id.txt: " + e.getMessage());
+            System.out.println("                                                                                           Error reading student file: " + e.getMessage());
             System.out.println("                                                                                        =======================================");
+        }
+        return null;
+    }
+
+    private int getValidStudentId(String adminName, Student[] students, int[] studentCount) {
+        int idToDeactivate = -1;
+        while (true) {
+            try {
+                System.out.print("\n                                                                                        =======================================");
+                System.out.print("\n                                                                                        Enter Student ID to deactivate: ");
+                idToDeactivate = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+
+                if (idToDeactivate < 0) {
+                    System.out.println("\n                                                                                        =======================================");
+                    System.out.println("                                                                                           Invalid input. Please enter a valid student ID.");
+                    System.out.println("                                                                                        =======================================");
+                } else {
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println("\n                                                                                        =======================================");
+                System.out.println("                                                                                           Invalid input. Please enter a valid student ID.");
+                System.out.println("                                                                                        =======================================");
+                scanner.nextLine(); // Consume invalid input
+            }
+        }
+        return idToDeactivate;
+    }
+
+    private void returnToDashboard(String adminName, Student[] students, int[] studentCount) {
+        while (true) {
+            System.out.print("\n                                                                                        Would you like to go back to the dashboard? (y/n): ");
+            String response = scanner.nextLine().trim().toLowerCase();
+            if (response.equals("y")) {
+                System.out.println("\n\n\n\n\n");
+                System.out.println("\n                                                                                        =======================================");
+                System.out.println("                                                                                           Returning to the Dashboard...\n");
+                System.out.println("                                                                                        =======================================");
+                return;
+            } else if (response.equals("n")) {
+                System.out.println("\n                                                                                        Continuing the process...\n");
+                break;
+            } else {
+                System.out.println("\n                                                                                        Invalid input. Please enter 'y' or 'n'.\n");
+            }
         }
     }
 }

@@ -242,7 +242,7 @@ public class Enroll_Student {
              PrintWriter printWriter = new PrintWriter(fileWriter)) {
 
             // Write header
-            printWriter.printf("ID,Name,Phone Number,Strand,Payment Status,Balance,Enrolled Subjects\n");
+            printWriter.printf("ID,Name,Phone Number,Strand,Payment Status,Balance,Enrolled Subjects,EnrollmentStatus,StudentStatus\n");
 
             // Prepare the enrolled subjects string
             StringBuilder subjectsString = new StringBuilder();
@@ -257,23 +257,27 @@ public class Enroll_Student {
                 subjectsString.setLength(subjectsString.length() - 2); // Remove the last "; "
             }
 
-            // Remove the ".csv" extension from the selected strand file name
-            String strandNameOnly = selectedStrandFileName.replace(".csv", ""); // Exclude the CSV extension
+            // Remove the ".csv" extension from the selected strand file name to get the strand name
+            String strandNameOnly = selectedStrandFileName.replace(".csv", "");
 
-            // Write student information along with enrolled subjects
-            printWriter.printf("%d,%s,%s,%s,%s,%.2f,%s\n",
+            // Write student data to the CSV file
+            printWriter.printf("%d,%s,%s,%s,%s,%.2f,%s,%s,%s\n",
                     student.getId(),
                     student.getName(),
                     student.getPhoneNumber(),
-                    strandNameOnly, // Use the strand name without the .csv extension
+                    strandNameOnly,
                     student.getPaymentStatus(),
                     student.getBalance(),
-                    subjectsString.toString()); // Add enrolled subjects here
+                    subjectsString.toString(),
+                    "Enrolled", // EnrollmentStatus (e.g., "Enrolled")
+                    "Active"    // StudentStatus (e.g., "Active")
+            );
 
         } catch (IOException e) {
-            System.out.println("Error saving student to file: " + e.getMessage());
+            System.out.println("                                                                                        Error saving student file: " + e.getMessage());
         }
     }
+
 
     private List<Student.Subject> loadSubjectsFromCSV(String fileName) {
         List<Student.Subject> subjects = new ArrayList<>();
