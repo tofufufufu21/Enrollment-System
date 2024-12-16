@@ -26,19 +26,29 @@ public class Student {
     private Strand selectedStrand; // Assuming Strand is a separate class
     private String paymentStatus;
     private double balance;
+    private String enrollmentStatus; // e.g., "Not Enrolled", "Enrolled"
+    private String studentStatus;
     private int id;
     private List<Subject> enrolledSubjects = new ArrayList<>(); // Initialize the list
 
     // Constructor
-    public Student(int id, String name, double balance, String phoneNumber, Strand selectedStrand, String paymentStatus) {
+    public Student(int id, String name, double balance, String phoneNumber, Strand selectedStrand, String paymentStatus,String enrollmentStatus, String studentStatus) {
         this.id = id;
         this.name = name;
         this.balance = balance;
         this.phoneNumber = phoneNumber;
         this.selectedStrand = selectedStrand;
         this.paymentStatus = paymentStatus;
+        this.enrollmentStatus = enrollmentStatus;  // Set dynamically
+        this.studentStatus = studentStatus;
+    }
+    public String getEnrollmentStatus() {
+        return enrollmentStatus;
     }
 
+    public String getStudentStatus() {
+        return studentStatus;
+    }
     // Getters and Setters
     public String getName() {
         return name;

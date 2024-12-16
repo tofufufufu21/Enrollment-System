@@ -143,7 +143,7 @@ public class Enroll_Student {
             Student.Strand selectedStrand = strands.get(choice - '1'); // Adjusting to index (0-based)
 
             // Create the Student object with the collected data
-            Student newStudent = new Student(lastId + 1, name, balance, phoneNumber, selectedStrand, "Unpaid");
+            Student newStudent = new Student(lastId + 1, name, balance, phoneNumber, selectedStrand, "Unpaid","Active","Not Enrolled");
 
 
 
@@ -189,6 +189,7 @@ public class Enroll_Student {
                 if (confirmationInput.length() == 1 && (confirmationInput.equalsIgnoreCase("y") || confirmationInput.equalsIgnoreCase("n"))) {
                     if (confirmationInput.equalsIgnoreCase("y")) {
                         System.out.println("                                                                                        Enrolling you now...\n");
+
                         break;
                     } else if (confirmationInput.equalsIgnoreCase("n")) {
                         System.out.println("                                                                                        Enrollment cancelled.\n");
@@ -200,9 +201,9 @@ public class Enroll_Student {
             } while (true);
 
             newStudent.setBalance(totalCost); // Updated balance calculation
-
             students[studentCount[0]] = newStudent;
             studentCount[0]++;
+
 
             saveStudentToFile(newStudent, fileName);
             saveNewId(lastId + 1); // Save the updated last used ID here
@@ -269,8 +270,8 @@ public class Enroll_Student {
                     student.getPaymentStatus(),
                     student.getBalance(),
                     subjectsString.toString(),
-                    "Enrolled", // EnrollmentStatus (e.g., "Enrolled")
-                    "Active"    // StudentStatus (e.g., "Active")
+                    student.getEnrollmentStatus(), // Access enrollment status from object
+                    student.getStudentStatus()   // StudentStatus (e.g., "Active")
             );
 
         } catch (IOException e) {

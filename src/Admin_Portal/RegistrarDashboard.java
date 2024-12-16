@@ -1,10 +1,10 @@
 package Admin_Portal;
 
 import Enrollment.Enroll_Student;
-import Enrollment.ShowAllStudents;
+import Enrollment.StudentRecords;
 import Enrollment.SearchStudent;
 import Enrollment.EditStudent;
-import Enrollment.DeleteStudent;
+import Enrollment.StudentStatus;
 import Enrollment.InitializeStrands;
 import Enrollment.Student; // Import the Student class from the Enrollment package
 import User_Types.UserType;
@@ -18,11 +18,11 @@ public class RegistrarDashboard {
     public static void adminPortal(String name, Student[] students, int[] studentCount) {
         char choice;
         Enroll_Student enrollStudent = new Enroll_Student();
-        ShowAllStudents showAllStudents = new ShowAllStudents();
+        StudentRecords studentRecords = new StudentRecords();
         SearchStudent searchStudent = new SearchStudent();
         EditStudent editStudent = new EditStudent();
         InitializeStrands initializeStrands = new InitializeStrands();
-        DeleteStudent deleteStudent = new DeleteStudent();
+        StudentStatus studentStatus = new StudentStatus();
 
         List<Student.Strand> strands = initializeStrands.initializeAllStrands();
 
@@ -34,10 +34,10 @@ public class RegistrarDashboard {
             System.out.println("                                                                                        ||           Welcome, " + name + "!             ||");
             System.out.println("                                                                                        ||                                       ||");
             System.out.println("                                                                                        ||      1. Enroll a New Student          ||");
-            System.out.println("                                                                                        ||      2. Show All Students             ||");
+            System.out.println("                                                                                        ||      2. Student Records             ||");
             System.out.println("                                                                                        ||      3. Search a Student              ||");
             System.out.println("                                                                                        ||      4. Edit Student Information      ||");
-            System.out.println("                                                                                        ||      5. Delete a Student              ||");
+            System.out.println("                                                                                        ||      5. Set Student Status             ||");
             System.out.println("                                                                                        ||      0. Log Out                       ||");
             System.out.println("                                                                                        ===========================================");
             System.out.print("                                                                                               Select your Choice: ");
@@ -51,7 +51,7 @@ public class RegistrarDashboard {
 
                 case '2': // Show all students
                     System.out.println("\nShowing all students from CSV...");
-                    showAllStudents.showAllFromCSV();
+                    studentRecords.showAllFromCSV();
                     Student.pressAnyKey();
                     break;
 
@@ -68,7 +68,7 @@ public class RegistrarDashboard {
 
                 case '5': // Delete a student
                     System.out.println("\nDeleting a student...");
-                    deleteStudent.deleteStudent(name, students, studentCount);
+                    studentStatus.deleteStudent(name, students, studentCount);
                     break;
 
                 case '0': // Log out

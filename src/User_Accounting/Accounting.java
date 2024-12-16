@@ -96,6 +96,8 @@ public class Accounting {
                 String name = studentData[1].trim();
                 String phoneNumber = studentData[2].trim();
                 String selectedStrandName = studentData[3].trim(); // Get strand name
+                String enrollmentStatus = studentData.length > 7 ? studentData[7].trim() : ""; // Get enrollment status
+                String studentStatus = studentData.length > 8 ? studentData[8].trim() : ""; // Get student status
                 String paymentStatus = studentData[4].trim();
                 double balance = Double.parseDouble(studentData[5].trim());
 
@@ -106,7 +108,7 @@ public class Accounting {
                 Student.Strand strand = new Student.Strand(selectedStrandName, subjects);
 
                 // Create the Student object
-                Student student = new Student(id, name, balance, phoneNumber, strand, paymentStatus);
+                Student student = new Student(id, name, balance, phoneNumber, strand, paymentStatus, enrollmentStatus, studentStatus);
 
                 // Get enrolled subjects as a list
                 if (studentData.length > 6) { // Check if there are enrolled subjects

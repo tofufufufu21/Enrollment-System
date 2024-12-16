@@ -70,6 +70,10 @@ public class DashboardMenu {
         System.out.println("💳 Payment Status: " + student.getPaymentStatus());
         System.out.printf("💰 Remaining Balance: %.2f%n", student.getBalance());
 
+        // New fields
+        System.out.println("📝 Enrollment Status: " + student.getEnrollmentStatus());
+        System.out.println("🚦 Student Status: " + student.getStudentStatus());
+
         // Display enrolled subjects
         System.out.println("\n📚 Enrolled Subjects:");
         if (!student.getEnrolledSubjects().isEmpty()) {

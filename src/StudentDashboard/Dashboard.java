@@ -79,12 +79,14 @@ public class Dashboard {
         String strandName = data[3].trim(); // Strand name from the CSV
         String paymentStatus = data[4].trim(); // Payment status from the CSV
         double balance = Double.parseDouble(data[5].trim()); // Balance from the CSV
+        String enrollmentStatus = data[7].trim(); // Enrollment Status from the CSV
+        String studentStatus = data[8].trim(); // Student Status from the CSV
 
         // Create Strand object based on the strandName from the CSV
         Student.Strand selectedStrand = new Student.Strand(strandName); // Create a new Strand object
 
-        // Create the student object with the Strand object
-        Student student = new Student(id, name, balance, phoneNumber, selectedStrand, paymentStatus);
+        // Create the student object with the Strand object and additional statuses
+        Student student = new Student(id, name, balance, phoneNumber, selectedStrand, paymentStatus, enrollmentStatus, studentStatus);
 
         // Load enrolled subjects
         if (data.length > 6) { // Check if enrolled subjects exist

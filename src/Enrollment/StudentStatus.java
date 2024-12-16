@@ -3,7 +3,7 @@ package Enrollment;
 import java.io.*;
 import java.util.Scanner;
 
-public class DeleteStudent {
+public class StudentStatus {
     private static Scanner scanner = new Scanner(System.in);
 
     public void deleteStudent(String adminName, Student[] students, int[] studentCount) {

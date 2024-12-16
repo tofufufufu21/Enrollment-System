@@ -103,10 +103,14 @@ public class StudentAccounting {
                 String paymentStatus = studentData[4].trim();
                 double balance = Double.parseDouble(studentData[5].trim());
                 String enrolledSubjects = studentData.length > 6 ? studentData[6].trim() : "";
+                String enrollmentStatus = studentData.length > 7 ? studentData[7].trim() : ""; // Enrollment Status from CSV
+                String studentStatus = studentData.length > 8 ? studentData[8].trim() : ""; // Student Status from CSV
 
                 // Load the strand with subjects
                 Student.Strand selectedStrand = loadStrand(selectedStrandName);
-                Student student = new Student(id, name, balance, phoneNumber, selectedStrand, paymentStatus);
+
+                // Create the student object with the new parameters
+                Student student = new Student(id, name, balance, phoneNumber, selectedStrand, paymentStatus, enrollmentStatus, studentStatus);
 
                 // Load enrolled subjects if any
                 if (!enrolledSubjects.isEmpty()) {
@@ -140,15 +144,20 @@ public class StudentAccounting {
              PrintWriter writer = new PrintWriter(new FileWriter(tempFile))) {
 
             // Read and write the header
-            if ((reader.readLine()) != null) {
-                writer.println("ID,Name,Phone Number,Strand,Payment Status,Balance,Enrolled Subjects");
+            String header = reader.readLine();
+            if (header != null) {
+                writer.println(header);
             }
 
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] studentData = line.split(",");
-                studentData[4] = student.getPaymentStatus();
-                studentData[5] = String.valueOf(student.getBalance());
+                studentData[4] = student.getPaymentStatus(); // Update Payment Status
+                studentData[5] = String.valueOf(student.getBalance()); // Update Balance
+
+                // Update EnrollmentStatus to "Enrolled" as soon as any payment is made
+                studentData[7] = "Enrolled"; // Assuming EnrollmentStatus is the 8th column
+
                 writer.println(String.join(",", studentData));
             }
 
@@ -156,10 +165,12 @@ public class StudentAccounting {
             System.out.println("Error updating student file: " + e.getMessage());
         }
 
+        // Replace the original file with the updated file
         if (!file.delete() || !tempFile.renameTo(file)) {
             System.out.println("Error replacing the file with updated information.");
         }
     }
+
 
     private void generateReceipt(Student student, double paymentAmount, double newBalance) {
         System.out.println("\n                                                                                        --- Payment Receipt ---");
